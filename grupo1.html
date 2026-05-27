@@ -115,10 +115,24 @@
             .cover-slide h2 { font-size: 3rem !important; }
             .map-box { height: 40vh; }
         }
+
+        @media print {
+            @page { size: landscape; margin: 0; }
+            .nav-controls, .btn-nav, .modal-backdrop, .ph, button, .modal-close { display: none !important; }
+            html, body { height: auto !important; overflow: visible !important; background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .slide { height: 100vh !important; max-height: 100vh !important; page-break-after: always !important; page-break-inside: avoid !important; break-after: page !important; overflow: hidden !important; display: flex !important; position: relative !important; }
+            .split-layout { display: flex !important; flex-direction: row !important; width: 100% !important; height: 100% !important; }
+            .split-text { padding: 2rem !important; background: white !important; }
+            .split-image { display: block !important; background-color: #f1f5f9 !important; }
+            .chart-item::before { display: none !important; }
+        }
     </style>
 </head>
 <body>
-    <div class="nav-controls"><a href="index.html" class="btn-nav"><i class="ph ph-house"></i> Menu Principal</a></div>
+    <div class="nav-controls">
+        <a href="index.html" class="btn-nav"><i class="ph ph-house"></i> Menu Principal</a>
+        <button onclick="window.print()" class="btn-nav" style="background: var(--accent); color: white; border: none;"><i class="ph ph-download-simple"></i> Salvar PDF</button>
+    </div>
 
     <!-- SLIDE 1: CAPA -->
     <section class="slide cover-slide">
@@ -521,6 +535,15 @@
             el.style.animationPlayState = 'paused';
             observer.observe(el);
         });
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('print') === 'true') {
+                setTimeout(() => {
+                    window.print();
+                }, 1000);
+            }
+        };
     </script>
 </body>
 </html>
