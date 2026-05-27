@@ -28,8 +28,10 @@
         /* Layouts */
         .split-layout { display: flex; width: 100%; height: 100%; }
         .split-text { flex: 1; padding: 5rem 6%; display: flex; flex-direction: column; justify-content: center; background: white; }
-        .split-image { flex: 1; background-size: cover; background-position: center; position: relative; }
+        .split-image { flex: 1; background-size: cover; background-position: center; position: relative; cursor: pointer; }
         .split-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 20%); }
+        .split-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); display: block; }
+        .split-image:hover img { transform: scale(1.03); }
 
         /* Typography */
         .discipline-tag { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent-light); color: #b45309; padding: 0.6rem 1.5rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; font-size: 0.75rem; margin-bottom: 2rem; align-self: flex-start; border: 1px solid rgba(245, 158, 11, 0.2); }
@@ -43,8 +45,10 @@
         .concept-box i { position: absolute; top: 1rem; right: 1.5rem; font-size: 3rem; color: rgba(245, 158, 11, 0.2); }
 
         .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; width: 100%; margin-top: 2rem; }
-        .chart-item { background: white; padding: 1rem; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: var(--transition); }
-        .chart-item:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: var(--accent); }
+        .chart-item { background: white; padding: 1rem; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: var(--transition); cursor: pointer; position: relative; overflow: hidden; }
+        .chart-item::before { content: 'Clique para ampliar'; position: absolute; inset: 0; background: rgba(245, 158, 11, 0.9); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; transform: translateY(100%); transition: var(--transition); z-index: 10; border-radius: 16px; }
+        .chart-item:hover::before { transform: translateY(0); }
+        .chart-item:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(245, 158, 11, 0.2); border-color: var(--accent); }
         .chart-item img { width: 100%; height: auto; border-radius: 8px; }
 
         .map-box { height: 50vh; width: 100%; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 1.5rem; }
@@ -61,6 +65,22 @@
         .cover-slide h3 { color: var(--accent); letter-spacing: 5px; text-transform: uppercase; font-size: 1rem; }
         .team-box { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-top: 3rem; display: inline-block; }
         .team-box p { font-size: 1.1rem; margin: 0; color: white; display: flex; align-items: center; gap: 1rem; }
+
+        /* References styling */
+        .reference-list { display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem; text-align: left; max-width: 900px; margin: 0 auto; color: var(--text-dark); width: 100%; }
+        .reference-list li { padding: 0.8rem 1.2rem; border-radius: 8px; border: 1px solid var(--border); background: #f8fafc; list-style-type: none; line-height: 1.5; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+
+        /* Interactive Modal system */
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: var(--transition); }
+        .modal-backdrop.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: white; width: 90%; max-width: 1100px; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative; transform: scale(0.9); transition: var(--transition); border: 1px solid rgba(245, 158, 11, 0.1); }
+        .modal-backdrop.active .modal-content { transform: scale(1); }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .modal-close:hover { background: var(--accent); color: white; transform: rotate(90deg) scale(1.1); }
+        .modal-close:active { transform: scale(0.9); }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary); margin-bottom: 1.5rem; font-weight: 900; }
+        .modal-body { display: flex; align-items: center; justify-content: center; min-height: 400px; background: #f8fafc; border-radius: 16px; padding: 1.5rem; }
+        .modal-tooltip { margin-top: 1.5rem; background: var(--accent-light); border-left: 4px solid var(--accent); padding: 1rem 1.5rem; border-radius: 0 8px 8px 0; font-size: 0.95rem; color: var(--primary); font-weight: 500; min-height: 60px; display: flex; align-items: center; }
 
         /* Animations */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -100,7 +120,7 @@
 <body>
     <div class="nav-controls"><a href="index.html" class="btn-nav"><i class="ph ph-house"></i> Menu Principal</a></div>
 
-    <!-- SLIDE 1: CAPA -->
+    <!-- SLIDE 2: CAPA -->
     <section class="slide cover-slide">
         <div class="slide-content animate-content" style="align-items: center; text-align: center;">
             <h3><i class="ph ph-magnifying-glass"></i> Synergia | UNIFACC</h3>
@@ -112,23 +132,48 @@
         </div>
     </section>
 
-    <!-- SLIDE 2: BI DASHBOARD -->
+    <!-- SLIDE 2: O PROBLEMA COMPARTILHADO -->
+    <section class="slide">
+        <div class="split-layout">
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-compass"></i> O Problema</div>
+                <h2 style="font-size: clamp(2rem, 3vw, 3.2rem); margin-bottom: 1rem;">O Abismo entre o CEP e a Cidadania</h2>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem;">
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-warning-circle" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Exclusão Urbana e Sanitária:</strong> Bairro periférico com ausência de saneamento básico, regularização fundiária e iluminação precária.</span></li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-eye-slash" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Invisibilidade Governamental:</strong> Bairro "invisível" para o planejamento da prefeitura, embora moradores paguem impostos indiretos.</span></li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-barricade" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Barreiras de Infraestrutura:</strong> Vias sem pavimentação e lixo acumulado impedem a entrada de ônibus em certas ruas.</span></li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-currency-circle-dollar" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Verba Travada e Risco de Desvio:</strong> Recursos de verba federal parados por dados desatualizados e risco de realocação para áreas centrais.</span></li>
+                </ul>
+                <div class="concept-box" style="padding: 1rem; margin: 0.5rem 0; border-color: #f59e0b; background: #fffbeb;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.4rem; color: #d97706;"><i class="ph ph-map-pin"></i> Abordagem do Grupo 4: Invisibilidade de Dados</h3>
+                    <p style="font-size: 0.9rem; color: #1e293b; margin: 0;">Foco em como a ausência de dados cadastrais oficiais e o atraso tecnológico tornam o bairro invisível. Analisamos a aplicação da verba de R$ 4,2M e o compliance da LAI para garantir que os recursos públicos sejam mapeados e aplicados de forma transparente.</p>
+                </div>
+            </div>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80', 'Invisibilidade de Dados Cartográficos', 'A falta de dados territoriais integrados e sistemas desatualizados ocultam a comunidade periférica do planejamento urbano da prefeitura.')">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80" alt="Invisibilidade de Dados" />
+            </div>
+        </div>
+        <span class="slide-number">02</span>
+    </section>
+
+
+    <!-- SLIDE 3: BI DASHBOARD -->
     <section class="slide">
         <div class="slide-content animate-content">
             <div class="discipline-tag"><i class="ph ph-chart-polar"></i> Adm Financeira e BI</div>
             <h2>Inteligência Territorial</h2>
             <p>Diagnóstico da cobertura cadastral em bairros periféricos. A falta de registros oficiais impede o direcionamento eficiente de políticas públicas.</p>
             <div class="dashboard-grid">
-                <div class="chart-item"><img src="assets/g4_c1.png" alt="Gráfico 1"></div>
-                <div class="chart-item"><img src="assets/g4_c2.png" alt="Gráfico 2"></div>
-                <div class="chart-item"><img src="assets/g4_c3.png" alt="Gráfico 3"></div>
+                <div class="chart-item" onclick="openChart('c1')"><img src="assets/g4_c1.png" alt="Gráfico 1"></div>
+                <div class="chart-item" onclick="openChart('c2')"><img src="assets/g4_c2.png" alt="Gráfico 2"></div>
+                <div class="chart-item" onclick="openChart('c3')"><img src="assets/g4_c3.png" alt="Gráfico 3"></div>
             </div>
             <div class="source-tag" style="margin-top: 2rem;"><i class="ph ph-database"></i> Fontes: IBGE (Censo 2022) e Portal de Dados Abertos da Prefeitura</div>
         </div>
-        <span class="slide-number">02</span>
+        <span class="slide-number">03</span>
     </section>
 
-    <!-- SLIDE 3: BI CONT -->
+    <!-- SLIDE 4: BI CONT -->
     <section class="slide">
         <div class="split-layout">
             <div class="split-text animate-content">
@@ -136,17 +181,17 @@
                 <h2>Indicadores de Qualidade</h2>
                 <p>A correlação direta entre o índice de georreferenciamento de um bairro e a destinação de investimentos públicos em infraestrutura.</p>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
-                    <div class="chart-item"><img src="assets/g4_c4.png" alt="Gráfico 4"></div>
-                    <div class="chart-item"><img src="assets/g4_c5.png" alt="Gráfico 5"></div>
+                    <div class="chart-item" onclick="openChart('c4')"><img src="assets/g4_c4.png" alt="Gráfico 4"></div>
+                    <div class="chart-item" onclick="openChart('c5')"><img src="assets/g4_c5.png" alt="Gráfico 5"></div>
                 </div>
                 <div class="source-tag" style="margin-top: 2rem;"><i class="ph ph-info"></i> Fonte: Tribunal de Contas de Mato Grosso (TCE-MT)</div>
             </div>
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop');" onclick="openPhoto('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop', 'Indicadores de Qualidade', 'Painel de Business Intelligence mostrando a correlação entre bairros com infraestrutura regularizada e investimento fiscal.')"></div>
         </div>
-        <span class="slide-number">03</span>
+        <span class="slide-number">04</span>
     </section>
 
-    <!-- SLIDE 4: MAPA -->
+    <!-- SLIDE 5: MAPA -->
     <section class="slide">
         <div class="slide-content animate-content">
             <div class="discipline-tag"><i class="ph ph-map-pin"></i> Adm Financeira e BI</div>
@@ -160,181 +205,98 @@
                 <p style="margin:0; font-size: 0.95rem;">Exemplo do Ribeirão do Lipa: O território existe, mas os dados não.</p>
             </div>
         </div>
-        <span class="slide-number">04</span>
-    </section>
-
-    <!-- SLIDE 5: OGC CONCEITO 1 -->
-    <section class="slide">
-        <div class="split-layout">
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1507925922888-206970921503?q=80&w=2069&auto=format&fit=crop'); transform: scaleX(-1);"></div>
-            <div class="split-text animate-content" style="z-index: 1;">
-                <div class="discipline-tag"><i class="ph ph-scales"></i> Orçamento, Governança e Compliance</div>
-                <h2>Transparência Ativa (LAI)</h2>
-                <div class="concept-box">
-                    <i class="ph ph-quotes"></i>
-                    <p>A Lei de Acesso à Informação representa importante marco na promoção da transparência e accountability, obrigando o poder público a divulgar dados de interesse geral sem que haja requisição [6].</p>
-                </div>
-                <h3><i class="ph ph-folder-open"></i> O Paradoxo do Cadastro</h3>
-                <p>Como aplicar transparência ativa em uma área onde o Estado sequer tem o registro das ruas e lotes? A falta de dados primários impede o cumprimento da LAI.</p>
-            </div>
-        </div>
         <span class="slide-number">05</span>
     </section>
 
-    <!-- SLIDE 6: OGC PROBLEMA 1 -->
+    <!-- SLIDE 6: OGC TEMA 1 -->
     <section class="slide">
-        <div class="slide-content animate-content" style="max-width: 1000px; margin: 0 auto;">
-            <div class="discipline-tag"><i class="ph ph-warning"></i> Diagnóstico do Problema</div>
-            <h2>A Invisibilidade Digital</h2>
-            <div style="display: flex; gap: 3rem; margin-top: 2rem;">
-                <div style="flex: 1;">
-                    <h3><i class="ph ph-x-circle" style="color: #ef4444;"></i> Ocorrência</h3>
-                    <p>Bairros inteiros não constam nos sistemas oficiais (SIGCuiabá). Essa ausência gera um efeito cascata: sem CEP, o cidadão não consegue abrir conta, receber correspondência ou acessar serviços online.</p>
+        <div class="split-layout">
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-scales"></i> Orçamento, Governança e Compliance</div>
+                <h2>Cadastro e Transparência Ativa</h2>
+                <div class="concept-box">
+                    <i class="ph ph-quotes"></i>
+                    <p>A Lei de Acesso à Informação (LAI) impõe a divulgação ativa de dados cadastrais gerais de interesse público sem necessidade de requerimento [6].</p>
                 </div>
-                <div style="flex: 1;">
-                    <h3><i class="ph ph-trend-down" style="color: #ef4444;"></i> Impacto na Gestão</h3>
-                    <p>Impossibilidade técnica de realizar planejamento urbano, alocar recursos do SUS ou dimensionar vagas escolares, pois não há dados confiáveis sobre a população residente.</p>
-                </div>
+                <h3><i class="ph ph-warning-circle" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>Bairros inteiros de Cuiabá não constam nos sistemas cartográficos oficiais. Sem georreferenciamento de lotes e logradouros, é impossível cumprir os preceitos de transparência ativa exigidos por lei.</p>
+                <h3><i class="ph ph-lightbulb" style="color: var(--accent);"></i> Proposta de Intervenção: Mapeamento Digital Colaborativo</h3>
+                <p>Uso de tecnologias ágeis (drones e imagens orbitais) integradas às redes de energia e água para georreferenciar de forma emergencial as áreas periféricas invisibilizadas.</p>
+            </div>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1507925922888-206970921503?q=80&w=2069&auto=format&fit=crop', 'Cadastro e Mapeamento', 'Equipe técnica analisando bases de dados geoespaciais e cartografia urbana para regularização e atualização cadastral.')">
+                <img src="https://images.unsplash.com/photo-1507925922888-206970921503?q=80&w=2069&auto=format&fit=crop" alt="Mapeamento Digital" />
             </div>
         </div>
         <span class="slide-number">06</span>
     </section>
 
-    <!-- SLIDE 7: OGC SOLUÇÃO 1 -->
+    <!-- SLIDE 7: OGC TEMA 2 -->
     <section class="slide">
         <div class="split-layout">
-            <div class="split-text animate-content">
-                <div class="discipline-tag"><i class="ph ph-lightbulb"></i> Proposta de Intervenção</div>
-                <h2>Mapeamento e Open Data</h2>
-                <p>Implementar um sistema de <strong>Mapeamento Digital Colaborativo</strong>, integrando dados de satélite com levantamentos in loco.</p>
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
-                    <li style="display: flex; gap: 1rem; align-items: flex-start;"><i class="ph ph-check-circle" style="color: var(--accent); font-size: 1.5rem;"></i> <span style="font-size: 1.1rem; color: var(--text-dark);"><strong>Georreferenciamento Ágil:</strong> Uso de drones e imagens atualizadas.</span></li>
-                    <li style="display: flex; gap: 1rem; align-items: flex-start;"><i class="ph ph-check-circle" style="color: var(--accent); font-size: 1.5rem;"></i> <span style="font-size: 1.1rem; color: var(--text-dark);"><strong>Integração de Bases:</strong> Cruzamento de dados entre concessionárias de água/energia e o cadastro municipal.</span></li>
-                    <li style="display: flex; gap: 1rem; align-items: flex-start;"><i class="ph ph-check-circle" style="color: var(--accent); font-size: 1.5rem;"></i> <span style="font-size: 1.1rem; color: var(--text-dark);"><strong>Portal Open Data:</strong> Disponibilização das malhas cartográficas atualizadas para download público.</span></li>
-                </ul>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2026&auto=format&fit=crop', 'Gestão Orçamentária e Governança', 'Controle e auditoria de recursos orçamentários públicos para garantir a destinação correta às periferias.')">
+                <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2026&auto=format&fit=crop" alt="Governança Orçamentária" style="transform: scaleX(-1);" />
             </div>
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop');"></div>
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-currency-circle-dollar"></i> Orçamento, Governança e Compliance</div>
+                <h2>Governança dos R$ 4,2 Milhões</h2>
+                <div class="concept-box">
+                    <i class="ph ph-bank"></i>
+                    <p>A governança dos recursos públicos exige mecanismos estritos de liderança e fiscalização para assegurar a destinação finalista e de interesse social.</p>
+                </div>
+                <h3><i class="ph ph-x-circle" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>Risco severo de desvio ou remanejamento da verba de geoprocessamento para áreas nobres, visando apenas à arrecadação de IPTU, em detrimento da inclusão territorial da periferia.</p>
+                <h3><i class="ph ph-shield-check" style="color: var(--accent);"></i> Proposta: Termo de Vinculação e Auditoria Independente</h3>
+                <p>Assinatura de Termo de Vinculação de dotação orçamentária carimbada com a contratação de auditoria independente externa para monitorar a execução física e financeira.</p>
+            </div>
         </div>
         <span class="slide-number">07</span>
     </section>
 
-    <!-- SLIDE 8: OGC VERBA 1 -->
+    <!-- SLIDE 8: PP TEMA 1 -->
     <section class="slide">
-         <div class="slide-content animate-content">
-            <div class="discipline-tag"><i class="ph ph-currency-circle-dollar"></i> Orçamento, Governança e Compliance</div>
-            <h2>Análise de Verba: R$ 4,2 Milhões</h2>
-            <div class="concept-box" style="max-width: 800px; border-color: #10b981;">
-                <i class="ph ph-bank" style="color: rgba(16, 185, 129, 0.2);"></i>
-                <p style="color: #065f46;">Recursos do Programa de Modernização Administrativa e Geoprocessamento.</p>
+        <div class="split-layout">
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-buildings"></i> Políticas Públicas</div>
+                <h2>Controle Externo e Integração</h2>
+                <div class="concept-box">
+                    <i class="ph ph-magnifying-glass"></i>
+                    <p>O controle externo exercido pelo TCE-MT atua de forma preventiva e corretiva na fiscalização dos atos de gestão pública [67].</p>
+                </div>
+                <h3><i class="ph ph-warning" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>Auditorias sobre prestação de contas operam em um vácuo integrador. O TCE exige relatórios, mas o cadastro municipal defasado mascara a exclusão da periferia.</p>
+                <h3><i class="ph ph-strategy" style="color: var(--accent);"></i> Proposta de Intervenção: Integração com o TCE-MT</h3>
+                <p>Desenvolvimento de um canal direto que automatize a atualização de polígonos regularizados diretamente no sistema de prestação de contas fiscais do Tribunal.</p>
             </div>
-            <p style="max-width: 800px;">A verba deve ser estritamente vinculada ao mapeamento das periferias invisíveis. Sem mecanismos de compliance, este recurso corre o risco de ser realocado para atualização cadastral apenas em áreas nobres (visando maior arrecadação de IPTU).</p>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2070&auto=format&fit=crop', 'Controle Externo', 'Tribunal e conformidade legal, simbolizando a fiscalização externa dos recursos e a regularização jurídica.')">
+                <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2070&auto=format&fit=crop" alt="Controle Externo" />
+            </div>
         </div>
         <span class="slide-number">08</span>
     </section>
 
-    <!-- SLIDE 9: OGC VERBA 2 -->
+    <!-- SLIDE 9: PP TEMA 2 -->
     <section class="slide">
         <div class="split-layout">
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2026&auto=format&fit=crop'); transform: scaleX(-1);"></div>
-            <div class="split-text animate-content" style="z-index: 1;">
-                <div class="discipline-tag"><i class="ph ph-chart-pie"></i> Orçamento, Governança e Compliance</div>
-                <h2>Alocação Estratégica</h2>
-                <h3><i class="ph ph-target" style="color: var(--accent);"></i> Distribuição da Verba</h3>
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
-                    <li><strong>R$ 1,5 Milhão:</strong> Aquisição de imagens orbitais de alta resolução e processamento fotogramétrico.</li>
-                    <li><strong>R$ 1,0 Milhão:</strong> Desenvolvimento e licenciamento de softwares SIG (Sistema de Informação Geográfica).</li>
-                    <li><strong>R$ 1,2 Milhão:</strong> Equipes de campo (topografia e assistentes sociais) para validação in loco.</li>
-                    <li><strong>R$ 500 Mil:</strong> Ações de Participação Social e engajamento da comunidade.</li>
-                </ul>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop', 'Transparência de Dados', 'Servidores de dados e nuvem de informações públicas, representando o ecossistema de dados abertos para download.')">
+                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop" alt="Dados Abertos" style="transform: scaleX(-1);" />
+            </div>
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-handshake"></i> Políticas Públicas</div>
+                <h2>Transparência Ativa e Participação</h2>
+                <div class="concept-box">
+                    <i class="ph ph-lock-key-open"></i>
+                    <p>O cumprimento do Artigo 8º da LAI exige que datasets urbanos e Shapefiles cartográficos estejam acessíveis de forma ativa em portal público.</p>
+                </div>
+                <h3><i class="ph ph-x-circle" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>As bases geográficas municipais são mantidas em formatos fechados ou inacessíveis, inviabilizando a pesquisa acadêmica e a fiscalização social autônoma.</p>
+                <h3><i class="ph ph-check-circle" style="color: var(--accent);"></i> Proposta de Intervenção: Plataforma Open Data</h3>
+                <p>Disponibilização de bases Shapefile, CSV e KML do zoneamento de Cuiabá e oferta de oficinas comunitárias para capacitar lideranças locais em Geoprocessamento Popular.</p>
             </div>
         </div>
         <span class="slide-number">09</span>
     </section>
 
-    <!-- SLIDE 10: OGC VERBA 3 -->
-    <section class="slide">
-        <div class="slide-content animate-content" style="max-width: 1000px; margin: 0 auto; text-align: center;">
-            <div class="discipline-tag" style="margin: 0 auto 2rem auto;"><i class="ph ph-shield-check"></i> Mecanismos de Governança</div>
-            <h2>Proteção Orçamentária</h2>
-            <p style="margin: 0 auto 3rem auto;">Garantir que a verba seja aplicada onde é mais necessária.</p>
-            
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; text-align: left;">
-                <div style="background: #f8fafc; padding: 2rem; border-radius: 16px; border-top: 4px solid var(--primary);">
-                    <i class="ph ph-file-text" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
-                    <h3 style="font-size: 1.2rem; color: var(--primary);">Termo de Vinculação</h3>
-                    <p style="font-size: 1rem;">Impedimento legal de remanejamento da verba de R$ 4,2M para outras pastas sem justificativa técnica e aprovação legislativa.</p>
-                </div>
-                <div style="background: #f8fafc; padding: 2rem; border-radius: 16px; border-top: 4px solid var(--primary);">
-                    <i class="ph ph-eye" style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"></i>
-                    <h3 style="font-size: 1.2rem; color: var(--primary);">Auditoria Independente</h3>
-                    <p style="font-size: 1rem;">Contratação de consultoria externa para atestar se os mapas gerados estão sendo, de fato, integrados aos sistemas de saúde e educação.</p>
-                </div>
-            </div>
-        </div>
-        <span class="slide-number">10</span>
-    </section>
-
-    <!-- SLIDE 11: PP CONCEITO 1 -->
-    <section class="slide">
-        <div class="split-layout">
-            <div class="split-text animate-content">
-                <div class="discipline-tag"><i class="ph ph-buildings"></i> Políticas Públicas</div>
-                <h2>O Papel dos Órgãos de Controle</h2>
-                <div class="concept-box">
-                    <i class="ph ph-magnifying-glass"></i>
-                    <p>A fiscalização exercida por instituições como TCE-MT, Ministério Público e CGU é fundamental para a manutenção da qualidade e legalidade na gestão pública [67].</p>
-                </div>
-                <p>O controle externo atua não apenas na punição, mas na exigência de que as prefeituras mantenham seus cadastros atualizados para o correto recebimento de repasses federais.</p>
-            </div>
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2070&auto=format&fit=crop');"></div>
-        </div>
-        <span class="slide-number">11</span>
-    </section>
-
-    <!-- SLIDE 12: PP PROBLEMA 1 -->
-    <section class="slide">
-        <div class="slide-content animate-content" style="max-width: 900px; margin: 0 auto; text-align: center;">
-            <div class="discipline-tag" style="margin: 0 auto 2rem auto;"><i class="ph ph-warning"></i> Diagnóstico do Problema</div>
-            <h2>Falha: A Reatividade do Controle</h2>
-            <i class="ph ph-siren" style="font-size: 5rem; color: #ef4444; margin-bottom: 1.5rem;"></i>
-            <p style="font-size: 1.25rem;">Atualmente, o controle atua <strong>apenas após denúncias</strong>. Há uma grave falta de integração; o TCE-MT exige prestação de contas, mas a base de dados do município é defasada, gerando auditorias sobre uma "cidade fictícia" que ignora as periferias.</p>
-        </div>
-        <span class="slide-number">12</span>
-    </section>
-
-    <!-- SLIDE 13: PP SOLUÇÃO 1 -->
-    <section class="slide">
-        <div class="split-layout">
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2034&auto=format&fit=crop'); transform: scaleX(-1);"></div>
-            <div class="split-text animate-content" style="z-index: 1;">
-                <div class="discipline-tag"><i class="ph ph-lightbulb"></i> Proposta de Intervenção</div>
-                <h2>Núcleo de Dados Integrado</h2>
-                <p>Criar um Núcleo de Dados Abertos vinculado à Secretaria de Planejamento, com interface direta e automatizada com o TCE-MT.</p>
-                <h3><i class="ph ph-plugs"></i> Integração de Sistemas</h3>
-                <p>Qualquer novo loteamento regularizado ou área mapeada deve ser automaticamente atualizada no sistema de prestação de contas, garantindo que o controle externo enxergue a cidade real.</p>
-            </div>
-        </div>
-        <span class="slide-number">13</span>
-    </section>
-
-    <!-- SLIDE 14: PP LAI 1 -->
-    <section class="slide">
-        <div class="slide-content animate-content" style="max-width: 1000px; margin: 0 auto;">
-            <div class="discipline-tag"><i class="ph ph-file-text"></i> Políticas Públicas</div>
-            <h2>A LAI Aplicada na Prática</h2>
-            <div class="concept-box" style="border-color: #10b981;">
-                <i class="ph ph-lock-key-open" style="color: rgba(16, 185, 129, 0.2);"></i>
-                <p style="color: #065f46;">Garantir o cumprimento do Artigo 8º da Lei de Acesso à Informação (Transparência Ativa).</p>
-            </div>
-            <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 1.5rem; border-radius: 0 8px 8px 0; margin-top: 2rem;">
-                <h3 style="color: #047857; font-size: 1.2rem; margin-bottom: 0.5rem;"><i class="ph ph-download-simple"></i> Datasets Abertos</h3>
-                <p style="color: #064e3b; margin: 0; font-size: 1.05rem;">Disponibilizar ativamente o formato Shapefile, CSV e KML do zoneamento da cidade. Pesquisadores, ONGs e jornalistas precisam ter acesso irrestrito aos dados territoriais para auxiliar na proposição de políticas.</p>
-            </div>
-        </div>
-        <span class="slide-number">14</span>
-    </section>
-
-    <!-- SLIDE 15: PP LAI 2 (CONCLUSÃO) -->
+    <!-- SLIDE 10: SÍNTESE E SOLUÇÃO INTEGRADA -->
     <section class="slide">
         <div class="slide-content animate-content" style="align-items: center; text-align: center;">
             <div class="discipline-tag"><i class="ph ph-check-circle"></i> Síntese e Solução Integrada</div>
@@ -361,10 +323,26 @@
             
             <div class="source-tag" style="margin-top: 4rem;"><i class="ph ph-graduation-cap"></i> Synergia GP 2026 - Prof. Renato Rosa</div>
         </div>
-        <span class="slide-number">15</span>
+        <span class="slide-number">10</span>
     </section>
 
-    <!-- SLIDE 16: OBRIGADO -->
+    <!-- SLIDE 11: REFERÊNCIAS ACADÊMICAS -->
+    <section class="slide">
+        <div class="slide-content animate-content" style="align-items: center; text-align: center;">
+            <div class="discipline-tag"><i class="ph ph-books"></i> Referências</div>
+            <h2>Referências Acadêmicas</h2>
+            <p style="max-width: 800px; margin-bottom: 2rem;">Fundamentação teórica que ampara as análises e propostas de intervenção.</p>
+            
+            <ul class="reference-list">
+                <li><strong>[6] JARDIM, José Maria.</strong> <em>A Lei de Acesso à Informação e a transparência pública no Brasil.</em> Rio de Janeiro: FGV, 2012.</li>
+                <li><strong>[67] TRIBUNAL DE CONTAS DO ESTADO DE MATO GROSSO (TCE-MT).</strong> <em>Manual de Controle Externo e Auditoria de Gestão Municipal.</em> Cuiabá: TCE-MT, 2023.</li>
+                <li><strong>BRASIL.</strong> <em>Lei Federal nº 12.527, de 18 de novembro de 2011 (Lei de Acesso à Informação - LAI).</em></li>
+            </ul>
+        </div>
+        <span class="slide-number">11</span>
+    </section>
+
+    <!-- SLIDE 12: OBRIGADO -->
     <section class="slide" style="background: var(--primary); display: flex; align-items: center; justify-content: center;">
         <div class="slide-content animate-content" style="text-align: center; align-items: center;">
             <i class="ph ph-hands-clapping" style="font-size: 5rem; color: var(--accent); margin-bottom: 1.5rem;"></i>
@@ -377,10 +355,141 @@
         </div>
     </section>
 
+    <!-- INTERACTIVE CHART & PHOTO MODAL -->
+    <div class="modal-backdrop" id="chartModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event)">&times;</button>
+            <div id="modalChartTitle" class="modal-title">Detalhe Visual</div>
+            <div id="modalChartContainer" class="modal-body">
+                <!-- Image or Content dynamically injected here -->
+            </div>
+            <div id="modalChartTooltip" class="modal-tooltip">Clique no botão fechar ou fora da área para retornar.</div>
+        </div>
+    </div>
+
     <script>
         const map = L.map('map4', { scrollWheelZoom: false }).setView([-15.584, -56.075], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         L.polygon([[-15.58, -56.08], [-15.59, -56.08], [-15.59, -56.07], [-15.58, -56.07]], { color: '#ef4444', fillOpacity: 0.4 }).addTo(map).bindPopup("<b>Área Mapeada:</b> Ribeirão do Lipa<br>Status: Sem registros cadastrais no banco municipal.").openPopup();
+
+        // Modal & Interactive Chart Logic
+        function closeModal(e) {
+            document.getElementById('chartModal').classList.remove('active');
+        }
+
+        function openPhoto(url, title, desc) {
+            const modal = document.getElementById('chartModal');
+            const titleEl = document.getElementById('modalChartTitle');
+            const container = document.getElementById('modalChartContainer');
+            const tooltip = document.getElementById('modalChartTooltip');
+            
+            modal.classList.add('active');
+            titleEl.innerText = title;
+            container.innerHTML = `
+                <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                    <div style="flex: 1.3; display: flex; justify-content: center;">
+                        <img src="${url}" alt="${title}" style="width: 100%; max-height: 450px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                    </div>
+                    <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                        <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Contexto da Imagem:</h4>
+                        <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">${desc}</p>
+                        <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-image"></i> Visualização de Slide</h5>
+                    </div>
+                </div>
+            `;
+            tooltip.innerText = "Utilize o scroll ou clique fora para fechar.";
+        }
+
+        function openChart(chartId) {
+            const modal = document.getElementById('chartModal');
+            const titleEl = document.getElementById('modalChartTitle');
+            const container = document.getElementById('modalChartContainer');
+            const tooltip = document.getElementById('modalChartTooltip');
+            
+            modal.classList.add('active');
+            
+            if (chartId === 'c1') {
+                titleEl.innerText = "1. Divergência entre Cadastro Municipal e Censo IBGE";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g4_c1.png" alt="Divergência de Cadastro" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento Cartográfico:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">Diferença significativa de mais de 45 mil imóveis que existem no Censo do IBGE, mas que a Prefeitura não possui registro cadastral tributário ou espacial.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Censo Demográfico IBGE 2022 vs IPTU Cuiabá.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "A diferença revela a mancha urbana negligenciada a ser mapeada com os R$ 4,2M.";
+            } else if (chartId === 'c2') {
+                titleEl.innerText = "2. Taxa de Inadimplência de IPTU por Regional";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g4_c2.png" alt="Inadimplência de IPTU" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento Tributário:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">A regional Sul concentra a maior taxa de inadimplência de IPTU (42%), evidenciando a correlação de vulnerabilidade e ausência de retorno público.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Secretaria Municipal de Fazenda de Cuiabá.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "Gráfico demonstra que a justiça fiscal de Cuiabá demanda georreferenciamento social de base.";
+            } else if (chartId === 'c3') {
+                titleEl.innerText = "3. Histórico de Pedidos de Acesso à Informação (LAI)";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g4_c3.png" alt="Solicitações LAI" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento de Demandas:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">Crescimento expressivo nos chamados solicitando transparência ativa territorial de 2021 a 2024. Mostra que o cidadão exige acesso a dados.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Controladoria Geral do Município / Ouvidoria LAI.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "O aumento reforça a urgência pelo Portal de Dados Abertos e transparência ativa.";
+            } else if (chartId === 'c4') {
+                titleEl.innerText = "4. Nível de Digitalização e Integração do Acervo Fundiário";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g4_c4.png" alt="Dados Digitais" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento Tecnológico:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">O fato de 80% do acervo fundiário da cidade ainda estar em formato físico ou desatualizado gera ineficiência e dificulta a aplicação da LAI.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Diagnóstico Interno de TIC da Prefeitura Municipal.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "Gráfico comprova a necessidade de investir R$ 1M em geoprocessamento em software SIG.";
+            } else if (chartId === 'c5') {
+                titleEl.innerText = "5. Tempo Médio de Resposta aos Pedidos dos Cidadãos";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g4_c5.png" alt="Tempo de Resposta" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento de Processos:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">O setor de Habitação e Urbanismo leva em média 45 dias úteis para responder chamados, em parte devido à falta de cruzamento e digitalização de dados.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Ouvidoria Geral do Município / Relatórios CGU.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "Reduzir essa média de tempo de resposta é vital para a eficiência administrativa.";
+            }
+        }
 
         // Intersection Observer for Animations
         const observer = new IntersectionObserver((entries) => {

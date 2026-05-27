@@ -28,8 +28,10 @@
         /* Layouts */
         .split-layout { display: flex; width: 100%; height: 100%; }
         .split-text { flex: 1; padding: 5rem 6%; display: flex; flex-direction: column; justify-content: center; background: white; }
-        .split-image { flex: 1; background-size: cover; background-position: center; position: relative; }
+        .split-image { flex: 1; background-size: cover; background-position: center; position: relative; cursor: pointer; }
         .split-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 20%); }
+        .split-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); display: block; }
+        .split-image:hover img { transform: scale(1.03); }
 
         /* Typography */
         .discipline-tag { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent-light); color: var(--accent); padding: 0.6rem 1.5rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; font-size: 0.75rem; margin-bottom: 2rem; align-self: flex-start; border: 1px solid rgba(37, 99, 235, 0.1); }
@@ -43,8 +45,10 @@
         .concept-box i { position: absolute; top: 1rem; right: 1.5rem; font-size: 3rem; color: rgba(37, 99, 235, 0.1); }
 
         .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; width: 100%; margin-top: 2rem; }
-        .chart-item { background: white; padding: 1rem; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: var(--transition); }
-        .chart-item:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border-color: var(--accent); }
+        .chart-item { background: white; padding: 1rem; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: var(--transition); cursor: pointer; position: relative; overflow: hidden; }
+        .chart-item::before { content: 'Clique para ampliar'; position: absolute; inset: 0; background: rgba(37, 99, 235, 0.9); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; transform: translateY(100%); transition: var(--transition); z-index: 10; border-radius: 16px; }
+        .chart-item:hover::before { transform: translateY(0); }
+        .chart-item:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.2); border-color: var(--accent); }
         .chart-item img { width: 100%; height: auto; border-radius: 8px; }
 
         .map-box { height: 50vh; width: 100%; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 1.5rem; }
@@ -61,6 +65,22 @@
         .cover-slide h3 { color: var(--accent); letter-spacing: 5px; text-transform: uppercase; font-size: 1rem; }
         .team-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); margin-top: 3rem; display: inline-block; }
         .team-box p { font-size: 1.1rem; margin: 0; color: white; display: flex; align-items: center; gap: 1rem; }
+
+        /* References styling */
+        .reference-list { display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem; text-align: left; max-width: 900px; margin: 0 auto; color: var(--text-dark); width: 100%; }
+        .reference-list li { padding: 0.8rem 1.2rem; border-radius: 8px; border: 1px solid var(--border); background: #f8fafc; list-style-type: none; line-height: 1.5; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+
+        /* Interactive Modal system */
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: var(--transition); }
+        .modal-backdrop.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: white; width: 90%; max-width: 1100px; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative; transform: scale(0.9); transition: var(--transition); border: 1px solid rgba(37, 99, 235, 0.1); }
+        .modal-backdrop.active .modal-content { transform: scale(1); }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .modal-close:hover { background: var(--accent); color: white; transform: rotate(90deg) scale(1.1); }
+        .modal-close:active { transform: scale(0.9); }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary); margin-bottom: 1.5rem; font-weight: 900; }
+        .modal-body { display: flex; align-items: center; justify-content: center; min-height: 400px; background: #f8fafc; border-radius: 16px; padding: 1.5rem; }
+        .modal-tooltip { margin-top: 1.5rem; background: var(--accent-light); border-left: 4px solid var(--accent); padding: 1rem 1.5rem; border-radius: 0 8px 8px 0; font-size: 0.95rem; color: var(--primary); font-weight: 500; min-height: 60px; display: flex; align-items: center; }
 
         /* Animations */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -100,7 +120,7 @@
 <body>
     <div class="nav-controls"><a href="index.html" class="btn-nav"><i class="ph ph-house"></i> Menu Principal</a></div>
 
-    <!-- SLIDE 1: CAPA -->
+    <!-- SLIDE 2: CAPA -->
     <section class="slide cover-slide">
         <div class="slide-content animate-content" style="align-items: center; text-align: center;">
             <h3><i class="ph ph-graduation-cap"></i> Synergia | UNIFACC</h3>
@@ -112,23 +132,48 @@
         </div>
     </section>
 
-    <!-- SLIDE 2: BI DASHBOARD -->
+    <!-- SLIDE 2: O PROBLEMA COMPARTILHADO -->
+    <section class="slide">
+        <div class="split-layout">
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-compass"></i> O Problema</div>
+                <h2 style="font-size: clamp(2rem, 3vw, 3.2rem); margin-bottom: 1rem;">O Abismo entre o CEP e a Cidadania</h2>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem;">
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-warning-circle" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Exclusão Urbana e Sanitária:</strong> Bairro periférico com ausência de saneamento básico, regularização fundiária e iluminação precária.</span></li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-eye-slash" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Invisibilidade Governamental:</strong> Bairro "invisível" para o planejamento da prefeitura, embora moradores paguem impostos indiretos.</span></li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-barricade" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Barreiras de Infraestrutura:</strong> Vias sem pavimentação e lixo acumulado impedem a entrada de ônibus em certas ruas.</span></li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-currency-circle-dollar" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Verba Travada e Risco de Desvio:</strong> Recursos de verba federal parados por dados desatualizados e risco de realocação para áreas centrais.</span></li>
+                </ul>
+                <div class="concept-box" style="padding: 1rem; margin: 0.5rem 0; border-color: #2563eb; background: #eff6ff;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.4rem; color: #2563eb;"><i class="ph ph-bus"></i> Abordagem do Grupo 2: Mobilidade</h3>
+                    <p style="font-size: 0.9rem; color: #1e293b; margin: 0;">Foco em como as ruas de terra impedem a entrada física de ônibus, isolando a comunidade. Analisamos a frota, as tarifas e o compliance do contrato de concessão para exigir melhorias viárias e regularidade do serviço.</p>
+                </div>
+            </div>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?auto=format&fit=crop&w=800&q=80', 'O Abismo entre o CEP e a Cidadania', 'Rua periférica sem pavimentação e poeira, ilustrando a barreira física que impede a entrada do transporte coletivo e o isolamento dos moradores.')">
+                <img src="https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?auto=format&fit=crop&w=800&q=80" alt="Rua Periférica Precária" />
+            </div>
+        </div>
+        <span class="slide-number">02</span>
+    </section>
+
+
+    <!-- SLIDE 3: BI DASHBOARD -->
     <section class="slide">
         <div class="slide-content animate-content">
             <div class="discipline-tag"><i class="ph ph-chart-line-up"></i> Adm Financeira e BI</div>
             <h2>Inteligência em Mobilidade</h2>
             <p>Análise de dados operacionais do transporte público na região metropolitana de Cuiabá, destacando gargalos e oportunidades de otimização de frota.</p>
             <div class="dashboard-grid">
-                <div class="chart-item"><img src="assets/g2_c1.png" alt="Gráfico 1"></div>
-                <div class="chart-item"><img src="assets/g2_c2.png" alt="Gráfico 2"></div>
-                <div class="chart-item"><img src="assets/g2_c3.png" alt="Gráfico 3"></div>
+                <div class="chart-item" onclick="openChart('c1')"><img src="assets/g2_c1.png" alt="Gráfico 1"></div>
+                <div class="chart-item" onclick="openChart('c2')"><img src="assets/g2_c2.png" alt="Gráfico 2"></div>
+                <div class="chart-item" onclick="openChart('c3')"><img src="assets/g2_c3.png" alt="Gráfico 3"></div>
             </div>
             <div class="source-tag" style="margin-top: 2rem;"><i class="ph ph-database"></i> Fontes: MTU (Associação Mato-grossense dos Transportadores Urbanos) e ARSEC - 2025</div>
         </div>
-        <span class="slide-number">02</span>
+        <span class="slide-number">03</span>
     </section>
 
-    <!-- SLIDE 3: BI CONT -->
+    <!-- SLIDE 4: BI CONT -->
     <section class="slide">
         <div class="split-layout">
             <div class="split-text animate-content">
@@ -136,17 +181,17 @@
                 <h2>Indicadores Financeiros</h2>
                 <p>O custo da tarifa vs. subsídios municipais. A análise financeira revela que bairros periféricos comprometem uma parcela maior da renda familiar com transporte.</p>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
-                    <div class="chart-item"><img src="assets/g2_c4.png" alt="Gráfico 4"></div>
-                    <div class="chart-item"><img src="assets/g2_c5.png" alt="Gráfico 5"></div>
+                    <div class="chart-item" onclick="openChart('c4')"><img src="assets/g2_c4.png" alt="Gráfico 4"></div>
+                    <div class="chart-item" onclick="openChart('c5')"><img src="assets/g2_c5.png" alt="Gráfico 5"></div>
                 </div>
                 <div class="source-tag" style="margin-top: 2rem;"><i class="ph ph-info"></i> Fonte: IBGE (Pesquisa de Orçamentos Familiares)</div>
             </div>
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?q=80&w=2070&auto=format&fit=crop');" onclick="openPhoto('https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?q=80&w=2070&auto=format&fit=crop', 'Indicadores Financeiros', 'Pessoas no transporte público coletivo, representando o impacto social e financeiro das tarifas na mobilidade urbana municipal.')"></div>
         </div>
-        <span class="slide-number">03</span>
+        <span class="slide-number">04</span>
     </section>
 
-    <!-- SLIDE 4: MAPA -->
+    <!-- SLIDE 5: MAPA -->
     <section class="slide">
         <div class="slide-content animate-content">
             <div class="discipline-tag"><i class="ph ph-map-pin"></i> Adm Financeira e BI</div>
@@ -158,125 +203,55 @@
             <div style="display: flex; gap: 1rem; align-items: center;">
                 <div class="source-tag"><i class="ph ph-crosshair"></i> Fonte: Malha Digital IBGE 2022 e Dados SIGCuiabá</div>
                 <p style="margin:0; font-size: 0.95rem;">Áreas mapeadas evidenciam a correlação entre baixa renda e alta distância dos eixos troncais.</p>
-            </div>
-        </div>
-        <span class="slide-number">04</span>
-    </section>
-
-    <!-- SLIDE 5: OGC CONCEITO 1 -->
-    <section class="slide">
-        <div class="split-layout">
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1450101499163-c8848c66cb85?q=80&w=2070&auto=format&fit=crop'); transform: scaleX(-1);"></div>
-            <div class="split-text animate-content" style="z-index: 1;">
-                <div class="discipline-tag"><i class="ph ph-scales"></i> Orçamento, Governança e Compliance</div>
-                <h2>Transparência e Accountability</h2>
-                <div class="concept-box">
-                    <i class="ph ph-quotes"></i>
-                    <p>Accountability refere-se à obrigação de prestação de contas, responsabilização e transparência dos gestores públicos perante a sociedade [1].</p>
-                </div>
-                <h3><i class="ph ph-magnifying-glass"></i> O que significa na prática?</h3>
-                <p>Não basta apenas publicar relatórios (transparência passiva). A gestão deve demonstrar de forma ativa e compreensível como os recursos da tarifa e subsídios estão sendo aplicados para melhorar o serviço [14].</p>
-            </div>
         </div>
         <span class="slide-number">05</span>
     </section>
 
-    <!-- SLIDE 6: OGC PROBLEMA 1 -->
+    <!-- SLIDE 6: OGC TEMA 1 -->
     <section class="slide">
-        <div class="slide-content animate-content" style="max-width: 1000px; margin: 0 auto;">
-            <div class="discipline-tag"><i class="ph ph-warning"></i> Diagnóstico do Problema</div>
-            <h2>Falta de Transparência Ativa</h2>
-            <div style="display: flex; gap: 3rem; margin-top: 2rem;">
-                <div style="flex: 1;">
-                    <h3><i class="ph ph-x-circle" style="color: #ef4444;"></i> Ocorrência</h3>
-                    <p>O bairro periférico não tem acesso claro às informações sobre a verba federal destinada ao programa de "Modernização e Sustentabilidade Urbana". Os dados existem, mas são inacessíveis ou técnicos demais.</p>
+        <div class="split-layout">
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-scales"></i> Orçamento, Governança e Compliance</div>
+                <h2>Transparência e Accountability</h2>
+                <div class="concept-box">
+                    <i class="ph ph-quotes"></i>
+                    <p>Accountability refere-se à obrigação de prestação de contas, responsabilização e transparência ativa dos gestores públicos [1].</p>
                 </div>
-                <div style="flex: 1;">
-                    <h3><i class="ph ph-trend-down" style="color: #ef4444;"></i> Impacto</h3>
-                    <p>Gera desconfiança na comunidade, sensação de abandono pelo poder público e inviabiliza o controle social sobre os recursos arrecadados via impostos e tarifas.</p>
-                </div>
+                <h3><i class="ph ph-warning-circle" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>O bairro periférico não possui acesso claro às informações sobre os R$ 4,2M federais destinados à Modernização Urbana, gerando desconfiança e impedindo o controle social [14].</p>
+                <h3><i class="ph ph-lightbulb" style="color: var(--accent);"></i> Proposta de Intervenção: Portal da Mobilidade</h3>
+                <p>Criação de um dashboard público simplificado com relatórios mensais de subsídios, tarifas e cumprimento de metas e horários de ônibus por linha.</p>
+            </div>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop', 'Portal da Mobilidade', 'Dashboard público de transparência ativa, facilitando a fiscalização cidadã sobre os repasses e a frota de transporte coletivo.')">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop" alt="Portal da Mobilidade" />
             </div>
         </div>
         <span class="slide-number">06</span>
     </section>
 
-    <!-- SLIDE 7: OGC SOLUÇÃO 1 -->
+    <!-- SLIDE 7: OGC TEMA 2 -->
     <section class="slide">
         <div class="split-layout">
-            <div class="split-text animate-content">
-                <div class="discipline-tag"><i class="ph ph-lightbulb"></i> Proposta de Intervenção</div>
-                <h2>Portal da Mobilidade</h2>
-                <p>Criação de um painel interativo (Dashboard Público) de transparência ativa focado exclusivamente no transporte coletivo de Cuiabá.</p>
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
-                    <li style="display: flex; gap: 1rem; align-items: flex-start;"><i class="ph ph-check-circle" style="color: var(--accent); font-size: 1.5rem;"></i> <span style="font-size: 1.1rem; color: var(--text-dark);"><strong>Dados Abertos:</strong> Relatórios mensais simplificados sobre arrecadação tarifária e subsídios.</span></li>
-                    <li style="display: flex; gap: 1rem; align-items: flex-start;"><i class="ph ph-check-circle" style="color: var(--accent); font-size: 1.5rem;"></i> <span style="font-size: 1.1rem; color: var(--text-dark);"><strong>Indicadores:</strong> Exibição do cumprimento de horários e condições da frota por linha.</span></li>
-                    <li style="display: flex; gap: 1rem; align-items: flex-start;"><i class="ph ph-check-circle" style="color: var(--accent); font-size: 1.5rem;"></i> <span style="font-size: 1.1rem; color: var(--text-dark);"><strong>Auditoria:</strong> Painel de acompanhamento de investimentos na renovação da frota.</span></li>
-                </ul>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1450101499163-c8848c66cb85?q=80&w=2070&auto=format&fit=crop', 'Governança e Fiscalização', 'Reunião de auditoria e conformidade, representando os mecanismos de controle interno e liderança para o cumprimento contratual.')">
+                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66cb85?q=80&w=2070&auto=format&fit=crop" alt="Governança e Controle" style="transform: scaleX(-1);" />
             </div>
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-shield-check"></i> Orçamento, Governança e Compliance</div>
+                <h2>Governança e Controle Interno</h2>
+                <div class="concept-box">
+                    <i class="ph ph-bank"></i>
+                    <p>Governança pública é o conjunto de mecanismos de liderança, estratégia e controle para avaliar, direcionar e monitorar a gestão [19].</p>
+                </div>
+                <h3><i class="ph ph-x-circle" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>As concessionárias de ônibus frequentemente descumprem as frotas mínimas acordadas e a prefeitura falha em aplicar sanções contratuais por falta de auditorias regulares de compliance.</p>
+                <h3><i class="ph ph-users" style="color: var(--accent);"></i> Proposta de Intervenção: Comitê de Governança Local</h3>
+                <p>Instituição de um comitê misto (Prefeitura, ARSEC, Ministério Público e moradores) para realizar auditorias mensais de conformidade e sancionar descumprimentos.</p>
+            </div>
         </div>
         <span class="slide-number">07</span>
     </section>
 
-    <!-- SLIDE 8: OGC CONCEITO 2 -->
-    <section class="slide">
-         <div class="slide-content animate-content">
-            <div class="discipline-tag"><i class="ph ph-scales"></i> Orçamento, Governança e Compliance</div>
-            <h2>Governança e Controle Interno</h2>
-            <div class="concept-box" style="max-width: 800px;">
-                <i class="ph ph-bank"></i>
-                <p>Governança pública é o conjunto de mecanismos de liderança, estratégia e controle postos em prática para avaliar, direcionar e monitorar a gestão pública [19].</p>
-            </div>
-            <p style="max-width: 800px;">A falta de governança permite que contratos de concessão sejam descumpridos sem penalidades severas, prejudicando o usuário final na ponta do sistema.</p>
-        </div>
-        <span class="slide-number">08</span>
-    </section>
-
-    <!-- SLIDE 9: OGC PROBLEMA 2 -->
-    <section class="slide">
-        <div class="split-layout">
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1580130058006-2d3345464195?q=80&w=2062&auto=format&fit=crop'); transform: scaleX(-1);"></div>
-            <div class="split-text animate-content" style="z-index: 1;">
-                <div class="discipline-tag"><i class="ph ph-warning"></i> Diagnóstico do Problema</div>
-                <h2>Ausência de Controle</h2>
-                <h3><i class="ph ph-x-circle" style="color: #ef4444;"></i> Ocorrência</h3>
-                <p>As concessionárias não cumprem as frotas mínimas exigidas em contrato, e o município falha em aplicar mecanismos de compliance e fiscalização adequados.</p>
-                <h3><i class="ph ph-trend-down" style="color: #ef4444;"></i> Consequência</h3>
-                <p>Ônibus superlotados, quebra frequente de veículos e aumento do tempo de espera, reduzindo a produtividade e qualidade de vida do trabalhador cuiabano.</p>
-            </div>
-        </div>
-        <span class="slide-number">09</span>
-    </section>
-
-    <!-- SLIDE 10: OGC SOLUÇÃO 2 -->
-    <section class="slide">
-        <div class="slide-content animate-content" style="max-width: 1000px; margin: 0 auto; text-align: center;">
-            <div class="discipline-tag" style="margin: 0 auto 2rem auto;"><i class="ph ph-lightbulb"></i> Proposta de Intervenção</div>
-            <h2>Comitê de Governança Local (CGL)</h2>
-            <p style="margin: 0 auto 3rem auto;">Instituir um comitê misto para mediação de conflitos e fiscalização contínua.</p>
-            
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: left;">
-                <div style="background: #f8fafc; padding: 2rem; border-radius: 16px; border-top: 4px solid var(--accent);">
-                    <i class="ph ph-users-three" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;"></i>
-                    <h3 style="font-size: 1.2rem;">Composição Mista</h3>
-                    <p style="font-size: 1rem;">Representantes da Prefeitura (Semob), ARSEC, Ministério Público e Associações de Moradores.</p>
-                </div>
-                <div style="background: #f8fafc; padding: 2rem; border-radius: 16px; border-top: 4px solid var(--accent);">
-                    <i class="ph ph-clipboard-text" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;"></i>
-                    <h3 style="font-size: 1.2rem;">Auditorias Regulares</h3>
-                    <p style="font-size: 1rem;">Realização de avaliações mensais de compliance nos contratos de concessão das empresas de ônibus.</p>
-                </div>
-                <div style="background: #f8fafc; padding: 2rem; border-radius: 16px; border-top: 4px solid var(--accent);">
-                    <i class="ph ph-gavel" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 1rem;"></i>
-                    <h3 style="font-size: 1.2rem;">Poder Sancionador</h3>
-                    <p style="font-size: 1rem;">O CGL terá autonomia para recomendar suspensão de repasses em caso de descumprimento de metas.</p>
-                </div>
-            </div>
-        </div>
-        <span class="slide-number">10</span>
-    </section>
-
-    <!-- SLIDE 11: PP CONCEITO 1 -->
+    <!-- SLIDE 8: PP TEMA 1 -->
     <section class="slide">
         <div class="split-layout">
             <div class="split-text animate-content">
@@ -284,59 +259,43 @@
                 <h2>O Ciclo de Políticas Públicas</h2>
                 <div class="concept-box">
                     <i class="ph ph-arrows-clockwise"></i>
-                    <p>O ciclo é composto por: Formação da Agenda, Formulação, Tomada de Decisão, Implementação e Avaliação [32].</p>
+                    <p>O ciclo é composto por cinco etapas consecutivas: Formação de Agenda, Formulação, Tomada de Decisão, Implementação e Avaliação [32].</p>
                 </div>
-                <p>Qualquer intervenção urbana eficaz deve respeitar estas etapas para evitar o desperdício de recursos públicos e garantir o atendimento real da demanda social.</p>
+                <h3><i class="ph ph-warning" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>A expansão do transporte coletivo para a periferia está travada na fase de <strong>formulação</strong>, devido ao atraso no geoprocessamento e à pressão política por obras centrais.</p>
+                <h3><i class="ph ph-strategy" style="color: var(--accent);"></i> Proposta de Intervenção: Orçamento Específico</h3>
+                <p>Aprovação legislativa de uma rubrica orçamentária carimbada e intransferível na LOA (Lei Orçamentária Anual) para garantir a pavimentação de rotas e a extensão das linhas.</p>
             </div>
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop');"></div>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop', 'Ciclo de Políticas Públicas', 'Obras de infraestrutura urbana, representando a fase de implementação física das políticas de mobilidade planejadas.')">
+                <img src="https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop" alt="Pavimentação e Políticas Públicas" />
+            </div>
         </div>
-        <span class="slide-number">11</span>
+        <span class="slide-number">08</span>
     </section>
 
-    <!-- SLIDE 12: PP PROBLEMA 1 -->
-    <section class="slide">
-        <div class="slide-content animate-content" style="max-width: 900px; margin: 0 auto; text-align: center;">
-            <div class="discipline-tag" style="margin: 0 auto 2rem auto;"><i class="ph ph-warning"></i> Diagnóstico do Problema</div>
-            <h2>Paralisação do Ciclo</h2>
-            <i class="ph ph-barricade" style="font-size: 5rem; color: #ef4444; margin-bottom: 1.5rem;"></i>
-            <p style="font-size: 1.25rem;">A política de mobilidade foi inserida na <strong>agenda</strong> (promessas de campanha), mas estagnou na fase de <strong>formulação</strong> devido a interesses corporativos e burocracia governamental. O projeto não chega à implementação na periferia.</p>
-        </div>
-        <span class="slide-number">12</span>
-    </section>
-
-    <!-- SLIDE 13: PP SOLUÇÃO 1 -->
+    <!-- SLIDE 9: PP TEMA 2 -->
     <section class="slide">
         <div class="split-layout">
-            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2069&auto=format&fit=crop'); transform: scaleX(-1);"></div>
-            <div class="split-text animate-content" style="z-index: 1;">
-                <div class="discipline-tag"><i class="ph ph-lightbulb"></i> Proposta de Intervenção</div>
-                <h2>Orçamento Específico</h2>
-                <p>Destravar o ciclo através da aprovação legislativa de dotação orçamentária vinculada (carimbada).</p>
-                <h3><i class="ph ph-strategy"></i> Como fazer:</h3>
-                <p>Aprovação do Orçamento Anual (LOA) com rubrica específica e intransferível para as obras de mobilidade no bairro em questão, blindando o recurso contra remanejamentos políticos.</p>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2069&auto=format&fit=crop', 'Participação Social', 'Moradores em audiência de planejamento participativo, expressando demandas locais e controlando as políticas governamentais.')">
+                <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2069&auto=format&fit=crop" alt="Participação Social" style="transform: scaleX(-1);" />
+            </div>
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-users-three"></i> Políticas Públicas</div>
+                <h2>Controle Democrático e Participação</h2>
+                <div class="concept-box">
+                    <i class="ph ph-handshake"></i>
+                    <p>A participação da sociedade civil é pilar do Estado Democrático, legitimando a formulação e a fiscalização de políticas públicas [39].</p>
+                </div>
+                <h3><i class="ph ph-x-circle" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>As decisões regulatórias (como trajetos e corte de linhas) são tomadas de forma verticalizada (top-down), sem consulta pública ou escuta às associações comunitárias.</p>
+                <h3><i class="ph ph-check-circle" style="color: var(--accent);"></i> Proposta de Intervenção: Audiências Públicas Co-geridas</h3>
+                <p>Criação de comissões deliberativas locais nos centros comunitários e de um canal digital para a co-gestão de itinerários e definição de horários críticos.</p>
             </div>
         </div>
-        <span class="slide-number">13</span>
+        <span class="slide-number">09</span>
     </section>
 
-    <!-- SLIDE 14: PP CONCEITO 2 & PROBLEMA 2 -->
-    <section class="slide">
-        <div class="slide-content animate-content" style="max-width: 1000px; margin: 0 auto;">
-            <div class="discipline-tag"><i class="ph ph-buildings"></i> Políticas Públicas</div>
-            <h2>Controle Democrático</h2>
-            <div class="concept-box">
-                <i class="ph ph-users"></i>
-                <p>A participação social é pilar do Estado Democrático, garantindo que a implementação da política pública reflita os anseios da sociedade civil [39].</p>
-            </div>
-            <div style="background: #fee2e2; border-left: 4px solid #ef4444; padding: 1.5rem; border-radius: 0 8px 8px 0; margin-top: 2rem;">
-                <h3 style="color: #b91c1c; font-size: 1.2rem; margin-bottom: 0.5rem;"><i class="ph ph-warning-circle"></i> Ausência de Participação</h3>
-                <p style="color: #7f1d1d; margin: 0; font-size: 1.05rem;">As decisões sobre rotas, cortes de linhas e horários são tomadas de forma verticalizada (top-down), sem consulta pública ou diálogo com as associações de moradores das áreas afetadas.</p>
-            </div>
-        </div>
-        <span class="slide-number">14</span>
-    </section>
-
-    <!-- SLIDE 15: PP SOLUÇÃO 2 -->
+    <!-- SLIDE 10: SÍNTESE E SOLUÇÃO INTEGRADA -->
     <section class="slide">
         <div class="slide-content animate-content" style="align-items: center; text-align: center;">
             <div class="discipline-tag"><i class="ph ph-check-circle"></i> Solução Integrada</div>
@@ -363,10 +322,28 @@
             
             <div class="source-tag" style="margin-top: 4rem;"><i class="ph ph-graduation-cap"></i> Synergia GP 2026 - Prof. Renato Rosa</div>
         </div>
-        <span class="slide-number">15</span>
+        <span class="slide-number">10</span>
     </section>
 
-    <!-- SLIDE 16: OBRIGADO -->
+    <!-- SLIDE 11: REFERÊNCIAS ACADÊMICAS -->
+    <section class="slide">
+        <div class="slide-content animate-content" style="align-items: center; text-align: center;">
+            <div class="discipline-tag"><i class="ph ph-books"></i> Referências</div>
+            <h2>Referências Acadêmicas</h2>
+            <p style="max-width: 800px; margin-bottom: 2rem;">Fundamentação teórica que ampara as análises e propostas de intervenção.</p>
+            
+            <ul class="reference-list">
+                <li><strong>[1] SECCHI, Leonardo.</strong> <em>Políticas Públicas: conceitos, esquemas de análise, casos práticos.</em> 2ª ed. São Paulo: Cengage Learning, 2013.</li>
+                <li><strong>[14] OSZLAK, Oscar.</strong> <em>O Estado Aberto: Transparência, Accountability e a Nova Cidadania na Era Digital.</em> Buenos Aires: Red Gob, 2020.</li>
+                <li><strong>[19] TRIBUNAL DE CONTAS DA UNIÃO (TCU).</strong> <em>Referencial Básico de Governança Aplicável a Órgãos e Entidades da Administração Pública.</em> Brasília: TCU, 2014.</li>
+                <li><strong>[32] SUBIRATS, Joan et al.</strong> <em>Análisis y gestión de políticas públicas.</em> Barcelona: Ariel, 2008.</li>
+                <li><strong>[39] DAGNINO, Evelina.</strong> <em>Sociedade Civil e Espaços Públicos no Brasil.</em> São Paulo: Paz e Terra, 2004.</li>
+            </ul>
+        </div>
+        <span class="slide-number">11</span>
+    </section>
+
+    <!-- SLIDE 12: OBRIGADO -->
     <section class="slide" style="background: var(--primary); display: flex; align-items: center; justify-content: center;">
         <div class="slide-content animate-content" style="text-align: center; align-items: center;">
             <i class="ph ph-hands-clapping" style="font-size: 5rem; color: var(--accent); margin-bottom: 1.5rem;"></i>
@@ -379,6 +356,18 @@
         </div>
     </section>
 
+    <!-- INTERACTIVE CHART & PHOTO MODAL -->
+    <div class="modal-backdrop" id="chartModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event)">&times;</button>
+            <div id="modalChartTitle" class="modal-title">Detalhe Visual</div>
+            <div id="modalChartContainer" class="modal-body">
+                <!-- Image or Content dynamically injected here -->
+            </div>
+            <div id="modalChartTooltip" class="modal-tooltip">Clique no botão fechar ou fora da área para retornar.</div>
+        </div>
+    </div>
+
     <script>
         const map = L.map('map2', { scrollWheelZoom: false }).setView([-15.618, -56.046], 12);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -387,6 +376,126 @@
         L.polyline(routeCoords, { color: '#2563eb', weight: 4 }).addTo(map);
         L.polygon([[-15.62, -56.05], [-15.63, -56.05], [-15.63, -56.04], [-15.62, -56.04]], { color: '#ef4444', fillOpacity: 0.4 }).addTo(map).bindPopup("Área de Exclusão (Déficit)").openPopup();
 
+        // Modal & Interactive Chart Logic
+        function closeModal(e) {
+            document.getElementById('chartModal').classList.remove('active');
+        }
+
+        function openPhoto(url, title, desc) {
+            const modal = document.getElementById('chartModal');
+            const titleEl = document.getElementById('modalChartTitle');
+            const container = document.getElementById('modalChartContainer');
+            const tooltip = document.getElementById('modalChartTooltip');
+            
+            modal.classList.add('active');
+            titleEl.innerText = title;
+            container.innerHTML = `
+                <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                    <div style="flex: 1.3; display: flex; justify-content: center;">
+                        <img src="${url}" alt="${title}" style="width: 100%; max-height: 450px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                    </div>
+                    <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                        <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Contexto da Imagem:</h4>
+                        <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">${desc}</p>
+                        <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-image"></i> Visualização de Slide</h5>
+                    </div>
+                </div>
+            `;
+            tooltip.innerText = "Utilize o scroll ou clique fora para fechar.";
+        }
+
+        function openChart(chartId) {
+            const modal = document.getElementById('chartModal');
+            const titleEl = document.getElementById('modalChartTitle');
+            const container = document.getElementById('modalChartContainer');
+            const tooltip = document.getElementById('modalChartTooltip');
+            
+            modal.classList.add('active');
+            
+            if (chartId === 'c1') {
+                titleEl.innerText = "1. Evolução da Frota Operacional (Transporte Coletivo)";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g2_c1.png" alt="Evolução da Frota" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento Operacional:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">Crescimento da frota de veículos operacionais na rede de transporte público coletivo de Cuiabá de 2020 a 2024. Mostra um incremento gradual, mas que ainda não cobre a totalidade do déficit periférico.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Ouvidoria Municipal e Agência Reguladora (ARSEC).</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "O gráfico demonstra o crescimento de frota que deve ser auditado pelo Comitê CGL.";
+            } else if (chartId === 'c2') {
+                titleEl.innerText = "2. Índice Mensal de Reclamações de Usuários (SAC)";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g2_c2.png" alt="Índice de Reclamações" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento de Demandas:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">O pico de reclamações registradas revela instabilidade na regularidade dos horários e atrasos sistemáticos nos bairros das franjas urbanas.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">ARSEC - 2025.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "Oscilação das chamadas mensais reflete a urgência por controle social ativo.";
+            } else if (chartId === 'c3') {
+                titleEl.innerText = "3. Estado das Vias nos Eixos Periféricos de Ônibus";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g2_c3.png" alt="Pavimentação Periférica" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid #e2e8f0; height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento Geográfico:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">O diagnóstico de que 65% das vias de circulação periférica não são pavimentadas explica a recusa física das empresas em adentrar as ruas de terra.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Plano Diretor de Pavimentação e Infraestrutura Urbana.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "A barreira física pavimentar é o foco central do orçamento LOA específico.";
+            } else if (chartId === 'c4') {
+                titleEl.innerText = "4. Cumprimento de Horários por Categoria de Linha";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g2_c4.png" alt="Cumprimento de Horários" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento de Frequência:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">Enquanto eixos troncais centrais atingem 82% de pontualidade, linhas alimentadoras de bairros têm apenas 45%, evidenciando a desigualdade espacial.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Semob Cuiabá - GPS 2025.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "Este gap exige controle do CGL e readequação de penalidades contratuais.";
+            } else if (chartId === 'c5') {
+                titleEl.innerText = "5. Evolução dos Custos de Operação por Quilômetro";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g2_c5.png" alt="Custos Operacionais" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento de Custos:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">O aumento dos insumos pressiona o valor da tarifa pública, sobrecarregando o orçamento das famílias de menor renda que residem nas periferias.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">ARSEC.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "Os custos justificam a demanda por subsídios cruzados eficientes.";
+            }
+        }
+
+        // Intersection Observer for Animations
         // Intersection Observer for Animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
