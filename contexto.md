@@ -30,7 +30,8 @@ Este documento resume as solicitações do Prof. Renato Rosa e as implementaçõ
 
 ### 7. Estrutura Multi-Páginas e Temas Específicos
 - **Pedido**: Separar a plataforma em um arquivo HTML para cada grupo e aprofundar problemas específicos de OGC e PP.
-- **Ações**: Criação de `index.html` (Home), `grupo2.html`, `grupo4.html` e `grupo6.html`. Inclusão de discussões sobre:
+- **Ações**: Criação de `index.html` (Home), `grupo1.html`, `grupo2.html`, `grupo4.html` e `grupo6.html`. Inclusão de discussões sobre:
+    - **Grupo 1**: Competitividade nas licitações, desvio em contratos periféricos, accountability e fiscalização comunitária por conselhos de bairro.
     - **Grupo 2**: Falta de transparência ativa, ausência de controle interno, paralisação do ciclo de políticas e falta de participação social.
     - **Grupo 4**: Verba de R$ 4,2M para dados, accountability e aplicação da LAI.
     - **Grupo 6**: Parceria Público-Privada (PPP), LAI e aprovação orçamentária anual.
@@ -51,7 +52,7 @@ Este documento resume as solicitações do Prof. Renato Rosa e as implementaçõ
 ### 10. Módulos de Mapas Interativos "QGIS Web" (Último Pedido)
 - **Pedido**: Criar mapas profissionais independentes estilo QGIS para cada grupo, com controle de camadas, KPIs, ferramentas de medição e exportação.
 - **Ações**:
-    - Desenvolvimento de `mapa_grupo2.html`, `mapa_grupo4.html` e `mapa_grupo6.html`.
+    - Desenvolvimento de `mapa_grupo1.html`, `mapa_grupo2.html`, `mapa_grupo4.html` e `mapa_grupo6.html`.
     - Integração de ferramentas avançadas: Medição de área/distância, layer switcher (Satélite/OSM), legendas dinâmicas e painéis laterais de KPIs.
     - Plotagem de dados GeoJSON embutidos representando rotas, redes de infraestrutura e áreas de déficit.
     - Conexão direta dos mapas com os slides da apresentação principal.
@@ -82,9 +83,12 @@ Este documento resume as solicitações do Prof. Renato Rosa e as implementaçõ
     - GeoJSON embutido no código JavaScript (sem dependências externas).
     - Popups interativos com dados ao hover/click em cada bairro.
 
-### 14. Layouts Personalizados por Grupo (Sem "Quadradinhos Genéricos")
-- **Pedido**: Criar visualizações únicas para cada grupo, evitando repetição de layout.
-- **Ações**:
+#### 🔍 Grupo 1 - Corrupção e Desvios de Verbas
+- Layout analítico com painel lateral de 4 cards de KPIs (Volume sob Suspeita, Obras Paradas, etc.).
+- Filtros de camadas: Obras Paralisadas, Sob Investigação, Obras Concluídas/Auditadas, Eixos de Alta Denúncia.
+- Simulador de Risco de Contrato interativo com base em dados de licitantes e sobrepreço SINAPI.
+- Polígonos de zonas de alta denúncia desenhados com coordenadas corretas.
+- Marcadores circulares vermelhos para indicar obras sob suspeita de desvios.
 
 #### 🚌 Grupo 2 - Transporte Público
 - Layout limpo com **painel estreito (300px)** focado em rotas e mobilidade.

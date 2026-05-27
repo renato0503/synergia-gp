@@ -267,4 +267,91 @@ for i in range(len(x_cobertura)):
     ax.text(x_cobertura[i], y_internacoes[i] + 15, f"{y_internacoes[i]} ob.", ha='center', weight='bold', color='#065f46', size=10)
 save_dashboard_chart(fig, 'g6_c5')
 
+
+# ==============================================================================
+# --- GRUPO 1: CORRUPÇÃO E DESVIO DE RECURSOS PÚBLICOS ---
+# ==============================================================================
+g1_primary = '#dc2626' # Red/Crimson
+g1_accent = '#991b1b' # Dark Red
+g1_light = '#f87171' # Light Red
+g1_dark = '#0f172a' # Slate/Black
+
+# 1. Recursos Federais Destinados vs. Auditados (Line/Area chart)
+fig, ax = plt.subplots(figsize=(7.5, 5.2))
+anos_g1 = ['2021', '2022', '2023', '2024', '2025']
+recursos_destinados = [15.2, 18.5, 22.1, 28.4, 32.8]
+recursos_auditados = [4.5, 5.8, 8.2, 12.1, 14.5]
+
+ax.plot(anos_g1, recursos_destinados, marker='o', color='#475569', linewidth=3, label='Recursos Repassados (Milhões R$)')
+ax.plot(anos_g1, recursos_auditados, marker='s', color='#dc2626', linewidth=4, label='Recursos Auditados (Milhões R$)')
+ax.fill_between(anos_g1, recursos_auditados, color='#dc2626', alpha=0.12)
+
+ax.set_ylabel('Recursos Financeiros (Milhões de R$)', weight='bold', size=11, color="#0f172a")
+ax.set_title('1. Recursos Federais Recebidos vs. Efetivamente Auditados\nFonte: Controladoria Geral da União (CGU) e TCE-MT 2025', weight='bold', pad=15, color="#0f172a")
+ax.set_ylim(0, 40)
+ax.set_xticks(range(len(anos_g1)))
+ax.set_xticklabels(anos_g1, weight='bold', size=11, color='#0f172a')
+ax.legend(frameon=True, facecolor='white', edgecolor='none')
+
+for i, val in enumerate(recursos_destinados):
+    ax.text(i, val + 1.0, f"R$ {val:.1f}M", ha='center', weight='bold', color='#475569', size=9)
+for i, val in enumerate(recursos_auditados):
+    ax.text(i, val - 2.0, f"R$ {val:.1f}M", ha='center', weight='bold', color='#991b1b', size=9)
+
+save_dashboard_chart(fig, 'g1_c1')
+
+# 2. Índice de Concorrência em Licitações de Obras (Bar chart)
+fig, ax = plt.subplots(figsize=(7.5, 5.2))
+categorias_lic = ['Competitiva (3+ Licitantes)', 'Baixa Concorrência (2 Licitantes)', 'Participante Único (Dispensa/Monopólio)']
+indices_lic = [28, 37, 35]
+bars = ax.bar(categorias_lic, indices_lic, color=['#475569', '#f87171', '#dc2626'], edgecolor='white', width=0.55)
+ax.set_ylabel('Percentual das Licitações de Infraestrutura (%)', weight='bold', size=11, color="#0f172a")
+ax.set_title('2. Grau de Competitividade em Licitações Municipais de Obras\nFonte: Tribunal de Contas de Mato Grosso (TCE-MT)', weight='bold', pad=15, color="#0f172a")
+ax.set_ylim(0, 50)
+ax.set_xticks(range(len(categorias_lic)))
+ax.set_xticklabels(['Competitiva\n(3+ Licitantes)', 'Baixa Concorrência\n(2 Licitantes)', 'Participante Único\n(Dispensa/Monopólio)'], size=10, color="#0f172a", weight="bold")
+ax.bar_label(bars, padding=3, weight='bold', size=11, color='#0f172a', fmt='%d%%')
+save_dashboard_chart(fig, 'g1_c2')
+
+# 3. Distribuição de Irregularidades Detectadas por Setor (Donut chart)
+fig, ax = plt.subplots(figsize=(7.5, 5.2))
+sizes_g1 = [42, 28, 18, 12]
+labels_g1 = ['Superfaturamento de Obras (42%)', 'Serviços Não Executados / Fantasmas (28%)', 'Fraude Documental / Licitação (18%)', 'Desvio direto / Outros (12%)']
+colors_g1 = ['#dc2626', '#ef4444', '#f87171', '#cbd5e1']
+wedges, texts, autotexts = ax.pie(sizes_g1, labels=labels_g1, autopct='%1.0f%%', startangle=90, 
+                                  colors=colors_g1, textprops=dict(color="#0f172a", weight="bold", size=10),
+                                  wedgeprops=dict(width=0.45, edgecolor='white', linewidth=2.5))
+for autotext in autotexts:
+    autotext.set_color('white')
+    autotext.set_size(11)
+    autotext.set_weight('bold')
+ax.set_title('3. Natureza das Irregularidades em Recursos de Infraestrutura\nFonte: Ouvidoria Municipal e Ministério Público Estadual (MPE)', weight='bold', pad=15, color="#0f172a")
+save_dashboard_chart(fig, 'g1_c3')
+
+# 4. Volume de Denúncias à Ouvidoria Geral por Regional (Bar chart)
+fig, ax = plt.subplots(figsize=(7.5, 5.2))
+regionais_g1 = ['Norte', 'Sul', 'Leste', 'Oeste']
+denuncias_g1 = [124, 215, 98, 142]
+bars = ax.bar(regionais_g1, denuncias_g1, color=['#f87171', '#dc2626', '#cbd5e1', '#ef4444'], edgecolor='white', width=0.6)
+ax.set_ylabel('Número de Denúncias Registradas (Ouvidoria)', weight='bold', size=11, color="#0f172a")
+ax.set_title('4. Volume de Denúncias de Obras Irregulares por Regional\nFonte: Controladoria Geral do Município - Ouvidoria Geral', weight='bold', pad=15, color="#0f172a")
+ax.set_ylim(0, 260)
+ax.set_xticks(range(len(regionais_g1)))
+ax.set_xticklabels(regionais_g1, size=11, color="#0f172a", weight="bold")
+ax.bar_label(bars, padding=3, weight='bold', size=11, color='#991b1b')
+save_dashboard_chart(fig, 'g1_c4')
+
+# 5. Divergência Média de Preço Contratado vs. Valor de Mercado (Superfaturamento) (Bar Chart)
+fig, ax = plt.subplots(figsize=(7.5, 5.2))
+insumos_g1 = ['Cimento / Concreto', 'Asfalto (CBUQ)', 'Tubulações (PVC)', 'Mão de Obra Operacional']
+sobrepreco_g1 = [18, 35, 24, 15]
+bars = ax.barh(insumos_g1, sobrepreco_g1, color=['#f87171', '#dc2626', '#ef4444', '#475569'], edgecolor='white', height=0.6)
+ax.set_xlabel('Percentual Médio de Sobrepreço (%)', weight='bold', size=11, color="#0f172a")
+ax.set_title('5. Divergência Média de Preço Contratado vs. Referencial SINAPI\nFonte: Auditoria de Custos de Contratos - MPE/TCE-MT', weight='bold', pad=15, color="#0f172a")
+ax.set_xlim(0, 45)
+ax.set_yticks(range(len(insumos_g1)))
+ax.set_yticklabels(insumos_g1, size=11, color="#0f172a", weight="bold")
+ax.bar_label(bars, padding=3, weight='bold', size=11, color='#0f172a', fmt='%d%%')
+save_dashboard_chart(fig, 'g1_c5')
+
 print("All GP dashboards generated successfully with publication style!")

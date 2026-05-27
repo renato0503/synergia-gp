@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupo 1 - Corrupção e Desvio | Synergia GP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        :root { --primary: #0f172a; --accent: #dc2626; --accent-light: #fff1f2; --bg-light: #ffffff; --text-dark: #1e293b; --text-muted: #64748b; --border: #e2e8f0; --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        html, body { height: 100%; overflow: hidden; background-color: var(--primary); }
+        body { scroll-snap-type: y mandatory; overflow-y: scroll; scroll-behavior: smooth; }
+        
+        /* Navigation */
+        .nav-controls { position: fixed; top: 2rem; right: 2rem; display: flex; gap: 1rem; z-index: 1000; }
+        .btn-nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); color: var(--primary); padding: 0.75rem 1.5rem; border-radius: 50px; cursor: pointer; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); transition: var(--transition); font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; }
+        .btn-nav:hover { background: var(--accent); color: white; transform: translateY(-2px); box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.2); border-color: var(--accent); }
+
+        /* Slide Basics */
+        .slide { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; overflow: hidden; background: var(--bg-light); display: flex; }
+        .slide-content { padding: 5rem 8%; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
+        
+        /* Layouts */
+        .split-layout { display: flex; width: 100%; height: 100%; }
+        .split-text { flex: 1; padding: 5rem 6%; display: flex; flex-direction: column; justify-content: center; background: white; }
+        .split-image { flex: 1; background-size: cover; background-position: center; position: relative; cursor: pointer; }
+        .split-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 20%); }
+        .split-image img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); display: block; }
+        .split-image:hover img { transform: scale(1.03); }
+
+        /* Typography */
+        .discipline-tag { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent-light); color: var(--accent); padding: 0.6rem 1.5rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; font-size: 0.75rem; margin-bottom: 2rem; align-self: flex-start; border: 1px solid rgba(220, 38, 38, 0.1); }
+        h2 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 4vw, 4.5rem); color: var(--primary); margin-bottom: 1.5rem; line-height: 1.1; font-weight: 900; }
+        h3 { color: var(--accent); font-size: clamp(1.2rem, 2vw, 1.8rem); margin-bottom: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem; }
+        p { font-size: 1.15rem; line-height: 1.8; color: var(--text-muted); max-width: 800px; margin-bottom: 1.5rem; }
+        
+        /* Components */
+        .concept-box { background: var(--accent-light); border-left: 4px solid var(--accent); padding: 2.5rem; border-radius: 0 20px 20px 0; margin: 2rem 0; position: relative; }
+        .concept-box p { color: var(--primary); font-size: 1.25rem; font-weight: 500; margin: 0; }
+        .concept-box i { position: absolute; top: 1rem; right: 1.5rem; font-size: 3rem; color: rgba(220, 38, 38, 0.1); }
+
+        .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; width: 100%; margin-top: 2rem; }
+        .chart-item { background: white; padding: 1rem; border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: var(--transition); cursor: pointer; position: relative; overflow: hidden; }
+        .chart-item::before { content: 'Clique para ampliar'; position: absolute; inset: 0; background: rgba(220, 38, 38, 0.9); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; transform: translateY(100%); transition: var(--transition); z-index: 10; border-radius: 16px; }
+        .chart-item:hover::before { transform: translateY(0); }
+        .chart-item:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(220, 38, 38, 0.2); border-color: var(--accent); }
+        .chart-item img { width: 100%; height: auto; border-radius: 8px; }
+
+        .map-box { height: 50vh; width: 100%; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 1.5rem; }
+        
+        /* Decorators */
+        .slide-number { position: absolute; bottom: 3rem; right: 4rem; font-family: 'Playfair Display', serif; font-weight: 900; color: rgba(15, 23, 42, 0.05); font-size: 8rem; z-index: 1; line-height: 1; pointer-events: none; }
+        .source-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted); background: #f8fafc; padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid var(--border); margin-top: auto; }
+        .source-tag i { color: var(--accent); }
+
+        /* Specific Covers */
+        .cover-slide { background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1450101499163-c8848c66cb85?q=80&w=2070&auto=format&fit=crop') center/cover; }
+        .cover-slide h2 { color: white; font-size: 5rem; }
+        .cover-slide p { color: #cbd5e1; font-size: 1.5rem; }
+        .cover-slide h3 { color: var(--accent); letter-spacing: 5px; text-transform: uppercase; font-size: 1rem; }
+        .team-box { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 2rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-top: 3rem; display: inline-block; }
+        .team-box p { font-size: 1.1rem; margin: 0; color: white; display: flex; align-items: center; gap: 1rem; }
+
+        /* References styling */
+        .reference-list { display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem; text-align: left; max-width: 900px; margin: 0 auto; color: var(--text-dark); width: 100%; }
+        .reference-list li { padding: 0.8rem 1.2rem; border-radius: 8px; border: 1px solid var(--border); background: #f8fafc; list-style-type: none; line-height: 1.5; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+
+        /* Interactive Modal system */
+        .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; pointer-events: none; transition: var(--transition); }
+        .modal-backdrop.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: white; width: 90%; max-width: 1100px; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); position: relative; transform: scale(0.9); transition: var(--transition); border: 1px solid rgba(220, 38, 38, 0.1); }
+        .modal-backdrop.active .modal-content { transform: scale(1); }
+        .modal-close { position: absolute; top: 1.5rem; right: 1.5rem; background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+        .modal-close:hover { background: var(--accent); color: white; transform: rotate(90deg) scale(1.1); }
+        .modal-close:active { transform: scale(0.9); }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary); margin-bottom: 1.5rem; font-weight: 900; }
+        .modal-body { display: flex; align-items: center; justify-content: center; min-height: 400px; background: #f8fafc; border-radius: 16px; padding: 1.5rem; }
+        .modal-tooltip { margin-top: 1.5rem; background: var(--accent-light); border-left: 4px solid var(--accent); padding: 1rem 1.5rem; border-radius: 0 8px 8px 0; font-size: 0.95rem; color: var(--primary); font-weight: 500; min-height: 60px; display: flex; align-items: center; }
+
+        /* Animations */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-content > * { animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; opacity: 0; }
+        .animate-content > *:nth-child(1) { animation-delay: 0.1s; }
+        .animate-content > *:nth-child(2) { animation-delay: 0.2s; }
+        .animate-content > *:nth-child(3) { animation-delay: 0.3s; }
+        .animate-content > *:nth-child(4) { animation-delay: 0.4s; }
+        .animate-content > *:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .nav-controls { top: 0.5rem; right: 0.5rem; }
+            .btn-nav { padding: 0.4rem 0.8rem; font-size: 0.75rem; }
+            .slide-content { padding: 4rem 5% 1rem 5%; overflow-y: auto; justify-content: flex-start; }
+            .split-layout { flex-direction: column; }
+            .split-image { flex: 0 0 25vh; min-height: 200px; }
+            .split-image::after { background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 20%); }
+            .split-text { flex: 1; padding: 2rem 5%; overflow-y: auto; justify-content: flex-start; }
+            .dashboard-grid { grid-template-columns: 1fr; gap: 1rem; }
+            div[style*="grid-template-columns: repeat(3, 1fr)"], div[style*="grid-template-columns: 1fr 1fr"], div[style*="grid-template-columns: repeat(2, 1fr)"] { grid-template-columns: 1fr !important; }
+            div[style*="display: flex; gap: 2rem; justify-content: center;"], div[style*="display: flex; gap: 3rem;"] { flex-direction: column; gap: 1rem !important; }
+            div[style*="width: 280px;"] { width: 100% !important; }
+            .concept-box { padding: 1.5rem; margin: 1rem 0; border-radius: 0 10px 10px 0; }
+            .concept-box i { font-size: 2rem; }
+            h2 { font-size: 2rem !important; margin-bottom: 1rem; }
+            h3 { font-size: 1.2rem; }
+            p { font-size: 1rem; line-height: 1.5; }
+            .discipline-tag { margin-bottom: 1rem; font-size: 0.65rem; padding: 0.4rem 1rem; }
+            .slide-number { bottom: 1rem; right: 1rem; font-size: 4rem; }
+            .team-box { padding: 1rem; margin-top: 1rem; }
+            .cover-slide h2 { font-size: 3rem !important; }
+            .map-box { height: 40vh; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-controls"><a href="index.html" class="btn-nav"><i class="ph ph-house"></i> Menu Principal</a></div>
+
+    <!-- SLIDE 1: CAPA -->
+    <section class="slide cover-slide">
+        <div class="slide-content animate-content" style="align-items: center; text-align: center;">
+            <h3><i class="ph ph-scales"></i> Synergia | UNIFACC</h3>
+            <h2>Corrupção e Desvio de<br>Recursos Públicos</h2>
+            <p>Os desafios de governança, compliance e auditoria na infraestrutura de Cuiabá.</p>
+            <div class="team-box">
+                <p><i class="ph ph-users"></i> <strong>Integrantes:</strong> Bruna, Keila, Marianne, Yanni</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: O PROBLEMA COMPARTILHADO -->
+    <section class="slide">
+        <div class="split-layout">
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-compass"></i> O Problema</div>
+                <h2 style="font-size: clamp(2rem, 3vw, 3.2rem); margin-bottom: 1rem;">O Abismo entre o CEP e a Cidadania</h2>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.2rem;">
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-warning-circle" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Exclusão Urbana e Sanitária:</strong> Bairro periférico com ausência de saneamento básico, regularização fundiária e iluminação precária.</span></li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-eye-slash" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Invisibilidade Governamental:</strong> Bairro "invisível" para o planejamento da prefeitura, embora moradores paguem impostos indiretos.</span></li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-barricade" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Barreiras de Infraestrutura:</strong> Vias sem pavimentação e lixo acumulado impedem a entrada de ônibus em certas ruas.</span></li>
+                    <li style="display: flex; gap: 0.75rem; align-items: flex-start;"><i class="ph ph-currency-circle-dollar" style="color: var(--accent); font-size: 1.3rem; margin-top: 0.2rem;"></i> <span style="font-size: 1rem; color: var(--text-dark);"><strong>Verba Travada e Risco de Desvio:</strong> Recursos de verba federal parados por dados desatualizados e risco de realocação para áreas centrais.</span></li>
+                </ul>
+                <div class="concept-box" style="padding: 1rem; margin: 0.5rem 0; border-color: #dc2626; background: #fff1f2;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.4rem; color: #b91c1c;"><i class="ph ph-shield-alert"></i> Abordagem do Grupo 1: Recursos e Controle</h3>
+                    <p style="font-size: 0.9rem; color: #1e293b; margin: 0;">Foco em auditar os contratos de obras públicas (como asfalto e esgoto) na periferia. Investigamos a aplicação de recursos e o compliance de licitações para combater o superfaturamento e garantir a entrega física do serviço.</p>
+                </div>
+            </div>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop', 'Obras Públicas e Auditoria', 'Obras de pavimentação inacabadas ou com asfalto de baixa qualidade, representando os alvos principais de auditoria e combate ao desvio de verbas.')">
+                <img src="https://images.unsplash.com/photo-1541888086425-d81bb19240f5?q=80&w=2070&auto=format&fit=crop" alt="Auditoria de Obras Periféricas" />
+            </div>
+        </div>
+        <span class="slide-number">02</span>
+    </section>
+
+    <!-- SLIDE 3: BI DASHBOARD -->
+    <section class="slide">
+        <div class="slide-content animate-content">
+            <div class="discipline-tag"><i class="ph ph-chart-line-up"></i> Adm Financeira e BI</div>
+            <h2>Inteligência e Combate a Desvios</h2>
+            <p>Análise de dados de repasses, contratos de infraestrutura municipal e auditorias. A detecção de anomalias estatísticas é o primeiro passo para o compliance público.</p>
+            <div class="dashboard-grid">
+                <div class="chart-item" onclick="openChart('c1')"><img src="assets/g1_c1.png" alt="Gráfico 1"></div>
+                <div class="chart-item" onclick="openChart('c2')"><img src="assets/g1_c2.png" alt="Gráfico 2"></div>
+                <div class="chart-item" onclick="openChart('c3')"><img src="assets/g1_c3.png" alt="Gráfico 3"></div>
+            </div>
+            <div class="source-tag" style="margin-top: 2rem;"><i class="ph ph-database"></i> Fontes: Portal da Transparência, Controladoria Geral da União (CGU) e TCE-MT - 2025</div>
+        </div>
+        <span class="slide-number">03</span>
+    </section>
+
+    <!-- SLIDE 4: BI CONT -->
+    <section class="slide">
+        <div class="split-layout">
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-chart-bar"></i> Adm Financeira e BI</div>
+                <h2>Auditoria Fiel de Custos</h2>
+                <p>Sobrepreço em materiais e alta densidade de denúncias nas regionais periféricas. A auditoria demonstra onde o orçamento se perde no ciclo físico das obras.</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                    <div class="chart-item" onclick="openChart('c4')"><img src="assets/g1_c4.png" alt="Gráfico 4"></div>
+                    <div class="chart-item" onclick="openChart('c5')"><img src="assets/g1_c5.png" alt="Gráfico 5"></div>
+                </div>
+                <div class="source-tag" style="margin-top: 2rem;"><i class="ph ph-info"></i> Fonte: MPE/MT, Sistema SINAPI e Ouvidorias Locais</div>
+            </div>
+            <div class="split-image" style="background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2026&auto=format&fit=crop');" onclick="openPhoto('https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=2026&auto=format&fit=crop', 'Auditoria Fiscal', 'Acompanhamento detalhado de notas fiscais e relatórios técnicos de medição para confrontar preços com a realidade física das obras.')"></div>
+        </div>
+        <span class="slide-number">04</span>
+    </section>
+
+    <!-- SLIDE 5: MAPA -->
+    <section class="slide">
+        <div class="slide-content animate-content">
+            <div class="discipline-tag"><i class="ph ph-map-pin"></i> Adm Financeira e BI</div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem;">
+                <h2>Mapeamento de Riscos e Obras Paradas</h2>
+                <a href="mapa_grupo1.html" target="_blank" class="btn-nav" style="background: var(--accent); color: white; margin-bottom: 1rem;"><i class="ph ph-map-trifold"></i> Abrir Mapa de Auditoria QGIS-Web</a>
+            </div>
+            <div id="map1" class="map-box"></div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <div class="source-tag"><i class="ph ph-crosshair"></i> Fonte: GEO-Obras TCE-MT e Ouvidoria Geral</div>
+                <p style="margin:0; font-size: 0.95rem;">Georreferenciamento indica a alta concentração de obras paralisadas nos eixos periféricos.</p>
+            </div>
+        </div>
+        <span class="slide-number">05</span>
+    </section>
+
+    <!-- SLIDE 6: OGC TEMA 1 -->
+    <section class="slide">
+        <div class="split-layout">
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-scales"></i> Orçamento, Governança e Compliance</div>
+                <h2>Compliance e Integridade Pública</h2>
+                <div class="concept-box">
+                    <i class="ph ph-quotes"></i>
+                    <p>Compliance na administração pública refere-se ao dever de agir em conformidade com as regras, leis, princípios éticos e regulamentos aplicáveis [19].</p>
+                </div>
+                <h3><i class="ph ph-warning-circle" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>Cuiabá registra baixo nível de concorrência em licitações periféricas (35% com concorrente único), criando um ambiente favorável ao superfaturamento e desvios de recursos.</p>
+                <h3><i class="ph ph-lightbulb" style="color: var(--accent);"></i> Proposta de Intervenção: Canal de Integridade e Denúncia</h3>
+                <p>Implantação de um sistema independente de integridade, integrado a um portal de denúncias anônimas sob gestão direta de auditoria externa e conselhos comunitários.</p>
+            </div>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1450101499163-c8848c66cb85?q=80&w=2070&auto=format&fit=crop', 'Compliance e Governança', 'Conselho e corpo jurídico assinando termos de compliance e integridade em contratações municipais.')">
+                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66cb85?q=80&w=2070&auto=format&fit=crop" alt="Integridade Pública" />
+            </div>
+        </div>
+        <span class="slide-number">06</span>
+    </section>
+
+    <!-- SLIDE 7: OGC TEMA 2 -->
+    <section class="slide">
+        <div class="split-layout">
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=2070&auto=format&fit=crop', 'Orçamento e Controle Social', 'Moradores e técnicos de contabilidade auditando planilhas de execução orçamentária e licitações locais.')">
+                <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=2070&auto=format&fit=crop" alt="Controle Social" style="transform: scaleX(-1);" />
+            </div>
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-users-three"></i> Orçamento, Governança e Compliance</div>
+                <h2>Controle Social das Obras Públicas</h2>
+                <div class="concept-box">
+                    <i class="ph ph-handshake"></i>
+                    <p>O Controle Social é a participação ativa do cidadão na fiscalização da aplicação dos recursos públicos e acompanhamento físico das entregas [39].</p>
+                </div>
+                <h3><i class="ph ph-x-circle" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>Os contratos federais para asfalto e esgoto na periferia de Cuiabá são pagos integralmente às construtoras com base em laudos de medição de papel, sem auditoria física local dos moradores.</p>
+                <h3><i class="ph ph-check-circle" style="color: var(--accent);"></i> Proposta: Conselho de Auditoria Local (CAL)</h3>
+                <p>Criação de conselhos por bairro com poder legal de assinar o termo de conclusão física das obras de infraestrutura antes da liberação de verbas contratuais da prefeitura.</p>
+            </div>
+        </div>
+        <span class="slide-number">07</span>
+    </section>
+
+    <!-- SLIDE 8: PP TEMA 1 -->
+    <section class="slide">
+        <div class="split-layout">
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-gavel"></i> Políticas Públicas</div>
+                <h2>Responsabilização e Accountability</h2>
+                <div class="concept-box">
+                    <i class="ph ph-shield-check"></i>
+                    <p>Accountability é o processo de responsabilização dos agentes públicos, englobando transparência, prestação de contas e sanção a desvios detectados [14].</p>
+                </div>
+                <h3><i class="ph ph-warning" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>Empresas contratadas para saneamento e vias periféricas abandonam os canteiros após receber adiantamentos contratuais, e a prefeitura raramente aplica punições ou multas de compliance.</p>
+                <h3><i class="ph ph-strategy" style="color: var(--accent);"></i> Proposta de Intervenção: Sanções Automáticas via SIG</h3>
+                <p>Integração de dados de auditoria física ao cadastro municipal de fornecedores para bloqueio automático de empresas sob suspeita de desvio ou inadimplência contratual.</p>
+            </div>
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2070&auto=format&fit=crop', 'Justiça e Responsabilização', 'Julgamento e aplicação de sanções legais, representando os mecanismos institucionais de combate à impunidade.')">
+                <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2070&auto=format&fit=crop" alt="Sanções Legais" />
+            </div>
+        </div>
+        <span class="slide-number">08</span>
+    </section>
+
+    <!-- SLIDE 9: PP TEMA 2 -->
+    <section class="slide">
+        <div class="split-layout">
+            <div class="split-image" onclick="openPhoto('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop', 'Tecnologia da Informação e LAI', 'Servidores de dados e redes integradas que viabilizam o acesso rápido a documentos públicos digitalizados.')">
+                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" alt="Sistemas Integrados" style="transform: scaleX(-1);" />
+            </div>
+            <div class="split-text animate-content">
+                <div class="discipline-tag"><i class="ph ph-lock-key-open"></i> Políticas Públicas</div>
+                <h2>Transparência Ativa e Combate à Opacidade</h2>
+                <div class="concept-box">
+                    <i class="ph ph-eye"></i>
+                    <p>A Lei de Acesso à Informação (LAI) impõe a publicidade como regra geral, obrigando a transparência ativa de contratos e medições de obras [6].</p>
+                </div>
+                <h3><i class="ph ph-x-circle" style="color: #ef4444;"></i> O Diagnóstico</h3>
+                <p>O Portal de Transparência municipal publica contratos digitalizados em imagens não pesquisáveis (PDF de foto) e oculta os relatórios de medição, dificultando o controle cidadão.</p>
+                <h3><i class="ph ph-check-circle" style="color: var(--accent);"></i> Proposta de Intervenção: Contratos Abertos em Blockchain</h3>
+                <p>Migração do sistema de publicação de contratos para formato indexável estruturado (JSON/CSV) com hashes criptográficos, impedindo alterações retroativas nos aditivos de preços.</p>
+            </div>
+        </div>
+        <span class="slide-number">09</span>
+    </section>
+
+    <!-- SLIDE 10: SÍNTESE E SOLUÇÃO INTEGRADA -->
+    <section class="slide">
+        <div class="slide-content animate-content" style="align-items: center; text-align: center;">
+            <div class="discipline-tag"><i class="ph ph-check-circle"></i> Solução Integrada</div>
+            <h2>A Integridade como Base do Direito à Cidade</h2>
+            <p style="max-width: 800px; margin-bottom: 3rem;">Evitar o desvio de recursos públicos garante que cada centavo federal ou municipal seja de fato convertido em asfalto, esgoto e dignidade na periferia.</p>
+            
+            <div style="display: flex; gap: 2rem; justify-content: center;">
+                <div style="background: white; padding: 2rem; border-radius: 16px; border: 1px solid var(--border); width: 280px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">
+                    <i class="ph ph-shield-check" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                    <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem;">Compliance</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Auditoria automática e termos de integridade em todas as licitações.</p>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 16px; border: 1px solid var(--border); width: 280px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">
+                    <i class="ph ph-globe" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                    <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem;">Dados Abertos</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Contratos em formato aberto integrados ao GEO-Obras.</p>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 16px; border: 1px solid var(--border); width: 280px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">
+                    <i class="ph ph-users-three" style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;"></i>
+                    <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.5rem;">Controle Social</h4>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">Ateste físico de obras periféricas co-gerido pela comunidade.</p>
+                </div>
+            </div>
+            
+            <div class="source-tag" style="margin-top: 4rem;"><i class="ph ph-graduation-cap"></i> Synergia GP 2026 - Prof. Renato Rosa</div>
+        </div>
+        <span class="slide-number">10</span>
+    </section>
+
+    <!-- SLIDE 11: REFERÊNCIAS ACADÊMICAS -->
+    <section class="slide">
+        <div class="slide-content animate-content" style="align-items: center; text-align: center;">
+            <div class="discipline-tag"><i class="ph ph-books"></i> Referências</div>
+            <h2>Referências Acadêmicas</h2>
+            <p style="max-width: 800px; margin-bottom: 2rem;">Fundamentação teórica que ampara as análises e propostas de intervenção.</p>
+            
+            <ul class="reference-list">
+                <li><strong>[6] JARDIM, José Maria.</strong> <em>A Lei de Acesso à Informação e a transparência pública no Brasil.</em> Rio de Janeiro: FGV, 2012.</li>
+                <li><strong>[14] OSZLAK, Oscar.</strong> <em>O Estado Aberto: Transparência, Accountability e a Nova Cidadania na Era Digital.</em> Buenos Aires: Red Gob, 2020.</li>
+                <li><strong>[19] TRIBUNAL DE CONTAS DA UNIÃO (TCU).</strong> <em>Referencial Básico de Governança Aplicável a Órgãos e Entidades da Administração Pública.</em> Brasília: TCU, 2014.</li>
+                <li><strong>[39] DAGNINO, Evelina.</strong> <em>Sociedade Civil e Espaços Públicos no Brasil.</em> São Paulo: Paz e Terra, 2004.</li>
+            </ul>
+        </div>
+        <span class="slide-number">11</span>
+    </section>
+
+    <!-- SLIDE 12: OBRIGADO -->
+    <section class="slide" style="background: var(--primary); display: flex; align-items: center; justify-content: center;">
+        <div class="slide-content animate-content" style="text-align: center; align-items: center;">
+            <i class="ph ph-hands-clapping" style="font-size: 5rem; color: var(--accent); margin-bottom: 1.5rem;"></i>
+            <h2 style="color: white; font-size: clamp(3rem, 6vw, 6rem); margin-bottom: 0.5rem;">Muito Obrigado!</h2>
+            <h3 style="color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem;">Grupo 1 - Auditoria e Integridade</h3>
+            <div class="team-box" style="margin-top: 1rem;">
+                <p><i class="ph ph-users"></i> <strong>Integrantes:</strong> Bruna, Keila, Marianne, Yanni</p>
+            </div>
+            <a href="index.html" class="btn-nav" style="margin-top: 3rem; background: var(--accent); color: white; border: none; padding: 1rem 2rem;"><i class="ph ph-house"></i> Voltar ao Menu Principal</a>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE CHART & PHOTO MODAL -->
+    <div class="modal-backdrop" id="chartModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event)">&times;</button>
+            <div id="modalChartTitle" class="modal-title">Detalhe Visual</div>
+            <div id="modalChartContainer" class="modal-body">
+                <!-- Image or Content dynamically injected here -->
+            </div>
+            <div id="modalChartTooltip" class="modal-tooltip">Clique no botão fechar ou fora da área para retornar.</div>
+        </div>
+    </div>
+
+    <script>
+        const map = L.map('map1', { scrollWheelZoom: false }).setView([-15.618, -56.046], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        // Simulação de Obras sob Auditoria (Pontos Vermelhos de risco)
+        const obrasSobAuditoria = [
+            { coords: [-15.5700, -56.1400], label: "<b>Pavimentação no Pedregal</b><br>Status: Paralisada por Auditoria<br>Divergência: 35% sobrepreço" },
+            { coords: [-15.5850, -56.1200], label: "<b>Rede de Esgoto Ribeirão do Lipa</b><br>Status: Sob Investigação<br>Divergência: Medição fictícia" },
+            { coords: [-15.5550, -56.0800], label: "<b>Construção Creche Parque Cuiabá</b><br>Status: Regularizada após Multa<br>Divergência: Corrigida" }
+        ];
+
+        obrasSobAuditoria.forEach(obra => {
+            L.circleMarker(obra.coords, {
+                radius: 8,
+                fillColor: '#dc2626',
+                color: '#fff',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map).bindPopup(obra.label);
+        });
+
+        // Modal & Interactive Chart Logic
+        function closeModal(e) {
+            document.getElementById('chartModal').classList.remove('active');
+        }
+
+        function openPhoto(url, title, desc) {
+            const modal = document.getElementById('chartModal');
+            const titleEl = document.getElementById('modalChartTitle');
+            const container = document.getElementById('modalChartContainer');
+            const tooltip = document.getElementById('modalChartTooltip');
+            
+            modal.classList.add('active');
+            titleEl.innerText = title;
+            container.innerHTML = `
+                <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                     <div style="flex: 1.3; display: flex; justify-content: center;">
+                         <img src="${url}" alt="${title}" style="width: 100%; max-height: 450px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                     </div>
+                     <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                         <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Contexto da Imagem:</h4>
+                         <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">${desc}</p>
+                         <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-image"></i> Visualização de Slide</h5>
+                     </div>
+                </div>
+            `;
+            tooltip.innerText = "Utilize o scroll ou clique fora para fechar.";
+        }
+
+        function openChart(chartId) {
+            const modal = document.getElementById('chartModal');
+            const titleEl = document.getElementById('modalChartTitle');
+            const container = document.getElementById('modalChartContainer');
+            const tooltip = document.getElementById('modalChartTooltip');
+            
+            modal.classList.add('active');
+            
+            if (chartId === 'c1') {
+                titleEl.innerText = "1. Recursos Federais Destinados vs. Auditados";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g1_c1.png" alt="Recursos Federais" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento de Auditoria:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">O gráfico demonstra o volume de verba repassada comparada à quantidade auditada. Menos de 50% dos recursos chegam a ser auditados de perto.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Controladoria Geral da União (CGU) e TCE-MT 2025.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "A diferença revela a área de sombra onde desvios podem ocorrer silenciosamente.";
+            } else if (chartId === 'c2') {
+                titleEl.innerText = "2. Grau de Competitividade em Licitações Municipais de Obras";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g1_c2.png" alt="Grau de Concorrência" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento de Licitações:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">Cerca de 35% das licitações operam com participante único e 37% com concorrência mínima, limitando a obtenção de preços vantajosos para o erário municipal.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Tribunal de Contas de Mato Grosso (TCE-MT).</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "Baixa competitividade exige revisão de editais e controle preventivo.";
+            } else if (chartId === 'c3') {
+                titleEl.innerText = "3. Natureza das Irregularidades em Recursos de Infraestrutura";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g1_c3.png" alt="Distribuição de Desvios" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid #e2e8f0; height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento Operacional:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">O superfaturamento de obras lidera com 42% das infrações, seguido de perto por serviços que foram pagos mas nunca executados (28%).</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Ouvidoria Municipal e Ministério Público Estadual (MPE-MT).</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "O superfaturamento demonstra a ineficiência de orçamentos e do controle físico.";
+            } else if (chartId === 'c4') {
+                titleEl.innerText = "4. Volume de Denúncias de Obras Irregulares por Regional";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g1_c4.png" alt="Denúncias por Regional" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento Geográfico:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">A regional Sul concentra a maior quantidade de denúncias de asfalto fictício e obras paradas, indicando forte vulnerabilidade local.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Controladoria Geral do Município - Ouvidoria Geral.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "Este acúmulo demanda canais participativos e a atuação do conselho comunitário.";
+            } else if (chartId === 'c5') {
+                titleEl.innerText = "5. Divergência Média de Preço Contratado vs. Referencial SINAPI";
+                container.innerHTML = `
+                    <div style="display: flex; gap: 1.5rem; align-items: center; flex-direction: row; width: 100%;">
+                        <div style="flex: 1.3; display: flex; justify-content: center;">
+                            <img src="assets/g1_c5.png" alt="Sobrepreço de Insumos" style="width: 100%; max-height: 450px; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); border: 1.5px solid var(--border);"/>
+                        </div>
+                        <div style="flex: 0.7; text-align: left; background: #f8fafc; padding: 1.2rem; border-radius: 16px; border: 1.5px solid var(--border); height: 100%; min-height: 250px; display: flex; flex-direction: column; justify-content: center;">
+                            <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-weight: 700; font-size: 0.95rem;"><i class="ph ph-info"></i> Detalhamento Orçamentário:</h4>
+                            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-dark); margin-bottom: 0.8rem;">O asfalto registra a maior margem de sobrepreço relativo (35%) comparado à tabela de referência oficial SINAPI, seguido por tubulações de PVC.</p>
+                            <h5 style="color: var(--text-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.2rem;"><i class="ph ph-database"></i> Fonte de Dados:</h5>
+                            <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">Auditorias de Custos de Contratos - MPE/TCE-MT.</span>
+                        </div>
+                    </div>
+                `;
+                tooltip.innerText = "O combate ao sobrepreço exige controle digital de licitações em tempo real.";
+            }
+        }
+
+        // Intersection Observer for Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.animate-content > *').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

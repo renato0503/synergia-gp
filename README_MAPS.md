@@ -4,6 +4,7 @@ Este repositório contém três módulos de mapas interativos desenvolvidos para
 
 ## 📁 Estrutura de Arquivos
 
+- `mapa_grupo1.html`: Focado em **Auditoria, Controle e Risco de Desvio de Verbas**.
 - `mapa_grupo2.html`: Focado em **Transporte Público e Mobilidade**.
 - `mapa_grupo4.html`: Focado em **Invisibilidade de Dados e Georreferenciamento**.
 - `mapa_grupo6.html`: Focado em **Saneamento Básico e Saúde Ambiental**.
@@ -12,6 +13,7 @@ Este repositório contém três módulos de mapas interativos desenvolvidos para
 
 Todos os mapas incluem:
 - **Botão de Retorno**: Integração fluida com as páginas de slides.
+- **Simulador de Risco (Grupo 1)**: Calculadora dinâmica de risco contratual com base em concorrência de licitantes e sobrepreço SINAPI.
 - **Simulação de Frota (Grupo 2)**: Visualização dinâmica de ônibus em movimento nas rotas.
 - **Medidor de Transparência (Grupo 4)**: Gauge dinâmico que reflete o nível de mapeamento por ano.
 - **Fluxo Hidráulico Animado (Grupo 6)**: Animação CSS nas linhas de rede para demonstrar fluxo de água/esgoto.
